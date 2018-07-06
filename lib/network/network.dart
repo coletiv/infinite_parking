@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:coletiv_infinite_parking/data/session.dart';
 import 'package:http/http.dart' as http;
 
 class Network {
@@ -11,10 +12,17 @@ class Network {
     'X-EOS-CLIENT-TOKEN': '2463bc87-6e92-480e-a56b-4260ff8b6a38'
   };
 
-  static Future<http.Response> login(String email, String password) async {
+  static Future<Session> login(String email, String password) async {
     final loginUrl = 'https://eos.empark.com/api/v1.0/auth/accounts';
     final body = json.encode({'username': email, 'password': password});
 
-    return http.post(loginUrl, headers: _headers, body: body);
+    final response = await http.post(loginUrl, headers: _headers, body: body);
+
+    if (response.statusCode == 200) {
+      return Session.fromJson(json.decode(response.body));
+    } else {
+      // TODO handle error
+      throw Exception("Authentication failed");
+    }
   }
 }

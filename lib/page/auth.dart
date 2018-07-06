@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-
 import 'package:coletiv_infinite_parking/network/network.dart';
+import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {
   @override
@@ -15,13 +14,11 @@ class _AuthPageState extends State<AuthPage> {
     final email = emailController.text;
     final password = passwordController.text;
 
-    final response = await Network.login(email, password);
+    final session = await Network.login(email, password);
 
-    if (response.statusCode == 200) {
-      // TODO go to next screen
-    } else {
-      // TODO show error
-    }
+    print(session);
+
+    // TODO save session and go to new screen
   }
 
   @override
