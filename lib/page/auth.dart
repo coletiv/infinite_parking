@@ -26,7 +26,7 @@ class _AuthPageState extends State<AuthPage> {
     final isLoggedIn = await authClient.login(email, password);
 
     if (isLoggedIn) {
-      Navigator.of(context).pushReplacementNamed('/Home');
+      Navigator.of(context).pushReplacementNamed('/Sessions');
     } else {
       _showError();
     }
