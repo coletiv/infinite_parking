@@ -10,8 +10,8 @@ class AuthClient {
 
   Future<bool> login(String email, String password) async {
     try {
-      final session = await network.login(email, password);
-      return sessionManager.saveSession(session);
+      final authToken = await network.login(email, password);
+      return sessionManager.saveAuthToken(authToken);
     } catch (e) {
       return false;
     }

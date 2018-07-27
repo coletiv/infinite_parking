@@ -1,12 +1,12 @@
-class Session {
+class AuthToken {
   final String accountToken;
   final String userSessionToken;
   final String clientToken;
 
-  const Session({this.accountToken, this.userSessionToken, this.clientToken});
+  const AuthToken({this.accountToken, this.userSessionToken, this.clientToken});
 
-  factory Session.fromJson(Map<String, dynamic> json) {
-    return Session(
+  factory AuthToken.fromJson(Map<String, dynamic> json) {
+    return AuthToken(
       accountToken: json['account_token'],
       userSessionToken: json['user_session_token'],
       clientToken: json['client_token'],

@@ -1,13 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:coletiv_infinite_parking/data/model/session.dart';
+import 'package:coletiv_infinite_parking/data/model/auth_token.dart';
 import 'package:http/http.dart' as http;
 
 final network = Network._internal();
 
 class Network {
   Network._internal();
+
+  final _baseUrl = 'https://eos.empark.com/api/v1.0';
 
   final _headers = {
     'Content-Type': 'application/json',
@@ -16,14 +18,14 @@ class Network {
     'X-EOS-CLIENT-TOKEN': '2463bc87-6e92-480e-a56b-4260ff8b6a38'
   };
 
-  Future<Session> login(String email, String password) async {
-    final loginUrl = 'https://eos.empark.com/api/v1.0/auth/accounts';
+  Future<AuthToken> login(String email, String password) async {
+    final loginUrl = '$_baseUrl/auth/accounts';
     final body = json.encode({'username': email, 'password': password});
 
     final response = await http.post(loginUrl, headers: _headers, body: body);
 
     if (response.statusCode == 200) {
-      return Session.fromJson(json.decode(response.body));
+      return AuthToken.fromJson(json.decode(response.body));
     } else {
       throw Exception("Authentication failed");
     }

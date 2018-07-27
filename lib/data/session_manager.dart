@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:coletiv_infinite_parking/data/model/session.dart';
+import 'package:coletiv_infinite_parking/data/model/auth_token.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final sessionManager = SessionManager._internal();
@@ -9,22 +9,22 @@ final sessionManager = SessionManager._internal();
 class SessionManager {
   SessionManager._internal();
 
-  final _sessionKey = "UserSession";
+  final _authTokenKey = "AuthToken";
 
-  Future<bool> saveSession(Session session) async {
+  Future<bool> saveAuthToken(AuthToken authToken) async {
     final prefs = await SharedPreferences.getInstance();
-    final sessionJson = json.encode(session);
-    return await prefs.setString(_sessionKey, sessionJson);
+    final authTokenJson = json.encode(authToken);
+    return await prefs.setString(_authTokenKey, authTokenJson);
   }
 
-  Future<Session> getSession() async {
+  Future<AuthToken> getAuthToken() async {
     final prefs = await SharedPreferences.getInstance();
-    final sessionJson = await prefs.get(_sessionKey);
-    return Session.fromJson(sessionJson);
+    final authTokenJson = await prefs.get(_authTokenKey);
+    return AuthToken.fromJson(authTokenJson);
   }
 
-  Future<bool> deleteSession() async {
+  Future<bool> deleteAuthToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return await prefs.setString(_sessionKey, null);
+    return await prefs.setString(_authTokenKey, null);
   }
 }
