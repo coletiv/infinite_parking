@@ -30,4 +30,8 @@ class Network {
       throw Exception("Authentication failed");
     }
   }
+
+  Future<xxx> getSessions(String accountToken) async {
+    final sessionsUrl = '$_baseUrl/parking/sessions?account=$accountToken&session_state=ACTIVE';
+  }
 }

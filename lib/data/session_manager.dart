@@ -27,4 +27,9 @@ class SessionManager {
     final prefs = await SharedPreferences.getInstance();
     return await prefs.setString(_authTokenKey, null);
   }
+
+  Future<bool> isLoggedIn() async {
+    final authToken = await getAuthToken();
+    return authToken != null ? true : false;
+  }
 }
