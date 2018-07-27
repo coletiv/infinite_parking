@@ -12,4 +12,11 @@ class Session {
       clientToken: json['client_token'],
     );
   }
+
+  Map<String, dynamic> toJson() =>
+      {
+        'account_token': accountToken,
+        'user_session_token': userSessionToken,
+        'client_token': clientToken
+      };
 }
