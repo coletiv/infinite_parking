@@ -26,7 +26,7 @@ class _AuthPageState extends State<AuthPage> {
     final isLoggedIn = await authClient.login(email, password);
 
     if (isLoggedIn) {
-      // TODO go to new screen
+      Navigator.of(context).pushReplacementNamed('/Home');
     } else {
       _showError();
     }
@@ -48,59 +48,60 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Authentication'),
-        ),
-        body: Builder(
-          builder: (BuildContext context) {
-            _scaffoldContext = context;
-            return Container(
-              margin: EdgeInsets.symmetric(horizontal: 20.0),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(bottom: 16.0),
-                      child: TextField(
-                        maxLines: 1,
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          hintText: 'Email',
-                        ),
+      appBar: AppBar(
+        title: Text('Authentication'),
+      ),
+      body: Builder(
+        builder: (BuildContext context) {
+          _scaffoldContext = context;
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 20.0),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(bottom: 16.0),
+                    child: TextField(
+                      maxLines: 1,
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        hintText: 'Email',
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 16.0),
-                      child: TextField(
-                        maxLines: 1,
-                        obscureText: true,
-                        controller: passwordController,
-                        decoration: InputDecoration(hintText: 'Password'),
-                      ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 16.0),
+                    child: TextField(
+                      maxLines: 1,
+                      obscureText: true,
+                      controller: passwordController,
+                      decoration: InputDecoration(hintText: 'Password'),
                     ),
-                    Stack(
-                      alignment: AlignmentDirectional.center,
-                      children: <Widget>[
-                        Opacity(
-                          opacity: isLoading ? 1.0 : 0.0,
-                          child: CircularProgressIndicator(),
+                  ),
+                  Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: <Widget>[
+                      Opacity(
+                        opacity: isLoading ? 1.0 : 0.0,
+                        child: CircularProgressIndicator(),
+                      ),
+                      Opacity(
+                        opacity: isLoading ? 0.0 : 1.0,
+                        child: RaisedButton(
+                          onPressed: _login,
+                          child: Text('LOGIN'),
                         ),
-                        Opacity(
-                          opacity: isLoading ? 0.0 : 1.0,
-                          child: RaisedButton(
-                            onPressed: _login,
-                            child: Text('LOGIN'),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
+                      ),
+                    ],
+                  )
+                ],
               ),
-            );
-          },
-        ));
+            ),
+          );
+        },
+      ),
+    );
   }
 
   @override
