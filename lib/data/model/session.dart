@@ -45,5 +45,28 @@ class Session {
     return costTimePair['cost'];
   }
 
-  DateTime getInitialDate() {}
+  Duration getDuration() {
+    final int durationString = costTimePair['duration_ms'];
+    return Duration(milliseconds: durationString);
+  }
+
+  DateTime getInitialDate() {
+    final dateString = dtStart["date"];
+    return DateTime.parse(dateString);
+  }
+
+  DateTime getFinalDate() {
+    return getInitialDate().add(getDuration());
+  }
+
+  Duration getTimeLeft() {
+    return getFinalDate().difference(DateTime.now());
+  }
+
+  String getFormattedFinalDate() {
+    final finalDate = getFinalDate();
+    final timeLeft = getTimeLeft();
+    return 'Ends: ${finalDate.hour}:${finalDate.minute} Time Left: ${timeLeft
+        .inMinutes} minutes';
+  }
 }

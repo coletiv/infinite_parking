@@ -1,3 +1,4 @@
+import 'package:coletiv_infinite_parking/data/model/session.dart';
 import 'package:coletiv_infinite_parking/network/client/session_client.dart';
 import 'package:flutter/material.dart';
 
@@ -11,18 +12,37 @@ class _SessionsPageState extends State<SessionsPage> {
 
   bool isLoading = false;
 
+  List<Session> sessions = List<Session>();
+
   void getSessions() async {
     updateLoadingState(true);
 
-    final response = await sessionClient.getSessions();
+    List<Session> userSessions = await sessionClient.getSessions();
 
-    updateLoadingState(false);
+    showSessions(userSessions);
+  }
+
+  void addSession() {
+    getSessions();
   }
 
   void updateLoadingState(bool isLoading) {
     setState(() {
       this.isLoading = isLoading;
     });
+  }
+
+  void showSessions(List<Session> sessions) {
+    setState(() {
+      this.isLoading = false;
+      this.sessions = sessions;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getSessions();
   }
 
   @override
@@ -34,28 +54,36 @@ class _SessionsPageState extends State<SessionsPage> {
       body: Builder(
         builder: (BuildContext context) {
           buildContext = context;
-          return Container(
-            margin: EdgeInsets.symmetric(horizontal: 20.0),
-            child: Center(
-              child: Stack(
-                alignment: AlignmentDirectional.center,
-                children: <Widget>[
-                  Opacity(
-                    opacity: isLoading ? 1.0 : 0.0,
-                    child: CircularProgressIndicator(),
-                  ),
-                  Opacity(
-                    opacity: isLoading ? 0.0 : 1.0,
-                    child: RaisedButton(
-                      onPressed: getSessions,
-                      child: Text('GET SESSIONS'),
-                    ),
-                  ),
-                ],
+          return Stack(
+            alignment: AlignmentDirectional.center,
+            children: <Widget>[
+              Opacity(
+                opacity: isLoading ? 1.0 : 0.0,
+                child: CircularProgressIndicator(),
               ),
-            ),
+              Opacity(
+                opacity: isLoading ? 0.0 : 1.0,
+                child: ListView.builder(
+                  itemCount: sessions.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
+                        sessions[index].getPlate(),
+                      ),
+                      subtitle: Text(
+                        sessions[index].getFormattedFinalDate(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: addSession,
       ),
     );
   }

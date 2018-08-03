@@ -4,14 +4,10 @@
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f1db6e41-bf79-4d2b-a8c9-a52e3538d474" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/network/client/session_client.dart" afterDir="false" />
+    <list default="true" id="f1db6e41-bf79-4d2b-a8c9-a52e3538d474" name="Default" comment="Get sessions">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/model/session.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/session.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/session_manager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/session_manager.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/network/client/auth_client.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/network/client/auth_client.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/network/network.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/network/network.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/page/auth.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/page/auth.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/network/client/session_client.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/network/client/session_client.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/page/sessions.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/page/sessions.dart" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.dart_tool/" />
@@ -28,22 +24,24 @@
     <session id="-361995936">
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="dart" value="29" />
+          <entry key="dart" value="42" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Dart" value="29" />
+          <entry key="Dart" value="42" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="dart" value="1209" />
+          <entry key="dart" value="2415" />
+          <entry key="txt" value="12" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Dart" value="1209" />
+          <entry key="Dart" value="2415" />
+          <entry key="PLAIN_TEXT" value="12" />
         </counts>
       </usages-collector>
     </session>
@@ -64,11 +62,11 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/lib/network/network.dart">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="846">
-                  <caret line="47" column="26" selection-start-line="47" selection-start-column="26" selection-end-line="47" selection-end-column="26" />
+                <state relative-caret-position="552">
+                  <caret line="53" selection-start-line="53" selection-end-line="53" />
                   <folding>
                     <element signature="e#0#20#0" expanded="true" />
                   </folding>
@@ -88,6 +86,27 @@
               </provider>
             </entry>
           </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/lib/data/model/session.dart">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="681">
+                  <caret line="68" column="21" selection-start-line="68" selection-start-column="21" selection-end-line="68" selection-end-column="21" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/lib/page/auth.dart">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="151">
+                  <caret line="56" column="16" selection-start-line="56" selection-start-column="10" selection-end-line="56" selection-end-column="16" />
+                  <folding>
+                    <element signature="e#0#74#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
         </leaf>
       </split-first>
       <split-second>
@@ -95,8 +114,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/lib/network/client/session_client.dart">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="234">
-                  <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
+                <state relative-caret-position="324">
+                  <caret line="18" selection-start-line="18" selection-end-line="18" />
                   <folding>
                     <element signature="e#0#20#0" expanded="true" />
                   </folding>
@@ -113,23 +132,14 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/lib/page/sessions.dart">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="288">
-                  <caret line="16" column="27" selection-start-line="16" selection-start-column="27" selection-end-line="16" selection-end-column="27" />
+                <state relative-caret-position="285">
+                  <caret line="25" column="18" selection-start-line="25" selection-start-column="18" selection-end-line="25" selection-end-column="18" />
                   <folding>
-                    <element signature="e#0#77#0" expanded="true" />
+                    <element signature="e#0#66#0" expanded="true" />
                   </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/lib/data/model/session.dart">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="414">
-                  <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
                 </state>
               </provider>
             </entry>
@@ -157,7 +167,12 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>map</find>
+      <find>initsta</find>
+      <find>return</find>
     </findStrings>
+    <dirStrings>
+      <dir>$PROJECT_DIR$/lib</dir>
+    </dirStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -166,11 +181,11 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/lib/network/client/auth_client.dart" />
-        <option value="$PROJECT_DIR$/lib/page/auth.dart" />
-        <option value="$PROJECT_DIR$/lib/network/client/session_client.dart" />
-        <option value="$PROJECT_DIR$/lib/page/sessions.dart" />
         <option value="$PROJECT_DIR$/lib/data/session_manager.dart" />
         <option value="$PROJECT_DIR$/lib/network/network.dart" />
+        <option value="$PROJECT_DIR$/lib/network/client/session_client.dart" />
+        <option value="$PROJECT_DIR$/lib/page/auth.dart" />
+        <option value="$PROJECT_DIR$/lib/page/sessions.dart" />
         <option value="$PROJECT_DIR$/lib/data/model/session.dart" />
       </list>
     </option>
@@ -184,111 +199,111 @@
   <component name="ProjectUserFactors">
     <factor id="binaryFeature:liftShorter">
       <dailyData date="3-8-2018">
-        <observation name="false" value="143,0" />
+        <observation name="false" value="300,0" />
       </dailyData>
     </factor>
     <factor id="binaryFeature:liftShorterClasses">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="binaryFeature:middleMatching">
       <dailyData date="3-8-2018">
-        <observation name="false" value="143,0" />
+        <observation name="false" value="300,0" />
       </dailyData>
     </factor>
     <factor id="binaryFeature:nonGeneric">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="binaryFeature:prox_inResolveScope">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="binaryFeature:prox_openedInEditor">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="binaryFeature:prox_sameDirectory">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="binaryFeature:prox_sameLogicalRoot">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="binaryFeature:prox_sdkOrLibrary">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="binaryFeature:templates">
       <dailyData date="3-8-2018">
-        <observation name="false" value="142,0" />
+        <observation name="false" value="299,0" />
         <observation name="true" value="1,0" />
       </dailyData>
     </factor>
     <factor id="categoricalFeature:accessible">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="categoricalFeature:expectedType">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="categoricalFeature:kind">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="categoricalFeature:prox_groovyReferenceListWeigher">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="categoricalFeature:prox_javaInheritance">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="categoricalFeature:prox_referenceList">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="categoricalFeature:recursion">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="completionFinishedType">
       <dailyData date="3-8-2018">
-        <observation name="cancelled" value="372,0" />
-        <observation name="explicitSelect" value="115,0" />
-        <observation name="typedSelect" value="28,0" />
+        <observation name="cancelled" value="667,0" />
+        <observation name="explicitSelect" value="257,0" />
+        <observation name="typedSelect" value="43,0" />
       </dailyData>
     </factor>
     <factor id="completionType">
       <dailyData date="3-8-2018">
-        <observation name="BASIC" value="211,0" />
+        <observation name="BASIC" value="425,0" />
       </dailyData>
     </factor>
     <factor id="completionUsage">
       <dailyData date="3-8-2018">
-        <observation name="count" value="515,0" />
+        <observation name="count" value="967,0" />
       </dailyData>
     </factor>
     <factor id="doubleFeature:explicitProximity">
       <dailyData date="3-8-2018">
         <observation name="average" value="0,0" />
-        <observation name="count" value="285,0" />
+        <observation name="count" value="599,0" />
         <observation name="max" value="0,0" />
         <observation name="min" value="0,0" />
         <observation name="variance" value="0,0" />
@@ -297,7 +312,7 @@
     <factor id="doubleFeature:grouping">
       <dailyData date="3-8-2018">
         <observation name="average" value="0,0" />
-        <observation name="count" value="285,0" />
+        <observation name="count" value="599,0" />
         <observation name="max" value="0,0" />
         <observation name="min" value="0,0" />
         <observation name="variance" value="0,0" />
@@ -305,36 +320,36 @@
     </factor>
     <factor id="doubleFeature:mostUsed">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="doubleFeature:nameEnd">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="doubleFeature:position">
       <dailyData date="3-8-2018">
-        <observation name="average" value="0,161404" />
-        <observation name="count" value="285,0" />
-        <observation name="max" value="3,0" />
+        <observation name="average" value="0,220367" />
+        <observation name="count" value="599,0" />
+        <observation name="max" value="5,0" />
         <observation name="min" value="0,0" />
-        <observation name="variance" value="0,278904" />
+        <observation name="variance" value="0,371499" />
       </dailyData>
     </factor>
     <factor id="doubleFeature:prefix">
       <dailyData date="3-8-2018">
-        <observation name="average" value="-1079,101754" />
-        <observation name="count" value="285,0" />
+        <observation name="average" value="-1071,292154" />
+        <observation name="count" value="599,0" />
         <observation name="max" value="0,0" />
         <observation name="min" value="-1202,0" />
-        <observation name="variance" value="64104,055505" />
+        <observation name="variance" value="65299,845702" />
       </dailyData>
     </factor>
     <factor id="doubleFeature:priority">
       <dailyData date="3-8-2018">
         <observation name="average" value="0,0" />
-        <observation name="count" value="285,0" />
+        <observation name="count" value="599,0" />
         <observation name="max" value="0,0" />
         <observation name="min" value="0,0" />
         <observation name="variance" value="0,0" />
@@ -342,28 +357,28 @@
     </factor>
     <factor id="doubleFeature:prox_explicitlyImported">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="doubleFeature:prox_knownElement">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="doubleFeature:prox_sameModule">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="doubleFeature:prox_samePsiMember">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="doubleFeature:query_length">
       <dailyData date="3-8-2018">
         <observation name="average" value="0,0" />
-        <observation name="count" value="285,0" />
+        <observation name="count" value="599,0" />
         <observation name="max" value="0,0" />
         <observation name="min" value="0,0" />
         <observation name="variance" value="0,0" />
@@ -371,32 +386,32 @@
     </factor>
     <factor id="doubleFeature:result_length">
       <dailyData date="3-8-2018">
-        <observation name="average" value="7,077193" />
-        <observation name="count" value="285,0" />
-        <observation name="max" value="24,0" />
+        <observation name="average" value="7,747913" />
+        <observation name="count" value="599,0" />
+        <observation name="max" value="28,0" />
         <observation name="min" value="1,0" />
-        <observation name="variance" value="13,377672" />
+        <observation name="variance" value="14,456063" />
       </dailyData>
     </factor>
     <factor id="doubleFeature:sameWords">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="doubleFeature:shorter">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="doubleFeature:simple">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="doubleFeature:sorter">
       <dailyData date="3-8-2018">
         <observation name="average" value="1,0" />
-        <observation name="count" value="285,0" />
+        <observation name="count" value="599,0" />
         <observation name="max" value="1,0" />
         <observation name="min" value="1,0" />
         <observation name="variance" value="0,0" />
@@ -404,47 +419,51 @@
     </factor>
     <factor id="doubleFeature:statics">
       <dailyData date="3-8-2018">
-        <observation name="UNDEFINED" value="143,0" />
+        <observation name="UNDEFINED" value="300,0" />
       </dailyData>
     </factor>
     <factor id="doubleFeature:stats">
       <dailyData date="3-8-2018">
-        <observation name="average" value="8170,775439" />
-        <observation name="count" value="285,0" />
+        <observation name="average" value="7334,933222" />
+        <observation name="count" value="599,0" />
         <observation name="max" value="10000,0" />
         <observation name="min" value="0,0" />
-        <observation name="variance" value="12385608,942287" />
+        <observation name="variance" value="15625848,353139" />
       </dailyData>
     </factor>
     <factor id="itemPosition">
       <dailyData date="3-8-2018">
-        <observation name="0" value="99,0" />
-        <observation name="1" value="11,0" />
-        <observation name="2" value="3,0" />
-        <observation name="3" value="2,0" />
+        <observation name="0" value="216,0" />
+        <observation name="1" value="26,0" />
+        <observation name="2" value="9,0" />
+        <observation name="3" value="4,0" />
+        <observation name="5" value="2,0" />
       </dailyData>
     </factor>
     <factor id="mnemonicsUsage">
       <dailyData date="3-8-2018">
-        <observation name="total" value="96,0" />
-        <observation name="withMnemonics" value="4,0" />
+        <observation name="total" value="221,0" />
+        <observation name="withMnemonics" value="21,0" />
       </dailyData>
     </factor>
     <factor id="prefixLength">
       <dailyData date="3-8-2018">
-        <observation name="0" value="6,0" />
-        <observation name="1" value="13,0" />
-        <observation name="2" value="51,0" />
-        <observation name="3" value="31,0" />
-        <observation name="4" value="12,0" />
-        <observation name="5" value="1,0" />
-        <observation name="6" value="1,0" />
+        <observation name="0" value="15,0" />
+        <observation name="1" value="21,0" />
+        <observation name="10" value="1,0" />
+        <observation name="2" value="95,0" />
+        <observation name="3" value="81,0" />
+        <observation name="4" value="27,0" />
+        <observation name="5" value="11,0" />
+        <observation name="6" value="4,0" />
+        <observation name="7" value="1,0" />
+        <observation name="8" value="1,0" />
       </dailyData>
     </factor>
     <factor id="timeBetweenTyping">
       <dailyData date="3-8-2018">
-        <observation name="average" value="227,683036" />
-        <observation name="count" value="224,0" />
+        <observation name="average" value="245,535714" />
+        <observation name="count" value="504,0" />
       </dailyData>
     </factor>
   </component>
@@ -508,7 +527,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="list&#9;FILE&#9;file:///home/antonio/Documents/flutter/SDK/bin/cache/pkg/sky_engine/lib/internal/list.dart&#10;growablelist&#9;null&#9;null" />
+    <property name="SearchEverywhereHistoryKey" value="duration&#9;null&#9;null&#10;list&#9;FILE&#9;file:///home/antonio/Documents/flutter/SDK/bin/cache/pkg/sky_engine/lib/internal/list.dart&#10;growablelist&#9;null&#9;null" />
     <property name="dart.analysis.tool.window.force.activate" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
     <property name="show.migrate.to.gradle.popup" value="false" />
@@ -555,12 +574,12 @@
       <option name="presentableId" value="Default" />
       <updated>1530635783836</updated>
     </task>
-    <task id="LOCAL-00001" summary="Delete unneeded file">
-      <created>1532704460964</created>
+    <task id="LOCAL-00001" summary="Get sessions">
+      <created>1533305189550</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1532704460964</updated>
+      <updated>1533305189550</updated>
     </task>
     <task id="LOCAL-00002" summary="Renamed session class to auth token">
       <created>1532704484328</created>
@@ -576,6 +595,7 @@
       <option name="project" value="LOCAL" />
       <updated>1532709339700</updated>
     </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -592,7 +612,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32900432" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.4672256" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.47637194" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.32317072" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -600,7 +620,7 @@
       <window_info anchor="bottom" id="Android Profiler" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50053364" side_tool="true" weight="0.329718" />
       <window_info anchor="bottom" id="Logcat" order="10" weight="0.7158136" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.4994664" visible="true" weight="0.3277439" />
+      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.4994664" weight="0.3269817" />
       <window_info anchor="bottom" id="Terminal" order="12" />
       <window_info anchor="bottom" id="Messages" order="13" weight="0.48376623" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -617,91 +637,77 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="Get sessions" />
+    <option name="LAST_COMMIT_MESSAGE" value="Get sessions" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="Dart">
-          <url>file://$PROJECT_DIR$/lib/network/network.dart</url>
-          <line>47</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="Dart">
-          <url>file://$PROJECT_DIR$/lib/network/client/session_client.dart</url>
-          <line>12</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="Dart">
-          <url>file://$PROJECT_DIR$/lib/network/client/session_client.dart</url>
-          <line>15</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="Dart">
-          <url>file://$PROJECT_DIR$/lib/network/network.dart</url>
-          <line>49</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="Dart">
-          <url>file://$PROJECT_DIR$/lib/page/sessions.dart</url>
-          <line>16</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="Dart">
-          <url>file://$PROJECT_DIR$/lib/network/network.dart</url>
-          <line>43</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="Dart">
-          <url>file://$PROJECT_DIR$/lib/network/client/session_client.dart</url>
-          <line>13</line>
-          <option name="timeStamp" value="18" />
+          <url>file://$PROJECT_DIR$/lib/data/model/session.dart</url>
+          <line>68</line>
+          <option name="timeStamp" value="29" />
         </line-breakpoint>
       </breakpoints>
+      <breakpoints-dialog>
+        <breakpoints-dialog />
+      </breakpoints-dialog>
     </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
       <expression>
+        <expression-string>getInitialDate()</expression-string>
+        <language-id>Dart</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>'${sessions[index].getPlate()}'</expression-string>
+        <language-id>Dart</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>this.sessions</expression-string>
+        <language-id>Dart</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>sessions</expression-string>
+        <language-id>Dart</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>response.first.getInitialDate()</expression-string>
+        <language-id>Dart</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>response.first.getFinalDate()</expression-string>
+        <language-id>Dart</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>response.first</expression-string>
+        <language-id>Dart</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>response.first.getDuration().inHours</expression-string>
+        <language-id>Dart</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>response.first.getDuration()</expression-string>
+        <language-id>Dart</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
         <expression-string>responseJson.map((object) =&gt; Session.fromJson(object)).toList()</expression-string>
-        <language-id>Dart</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>responseJson.map((object) =&gt; Session.fromJson(object))</expression-string>
-        <language-id>Dart</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>responseJson.map((session) =&gt; Session.fromJson(session)).toList()</expression-string>
-        <language-id>Dart</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>responseJson.map((session) =&gt; Session.fromJson(session))</expression-string>
-        <language-id>Dart</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>responseJson is List</expression-string>
-        <language-id>Dart</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>responseJson as List</expression-string>
-        <language-id>Dart</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>responseJson</expression-string>
-        <language-id>Dart</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>json.decode(response.body) as List</expression-string>
-        <language-id>Dart</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>json.decode(response.body)</expression-string>
         <language-id>Dart</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -780,26 +786,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/page/auth.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="522">
-          <caret line="41" selection-start-line="41" selection-end-line="45" selection-end-column="3" />
-          <folding>
-            <element signature="e#0#74#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/network/client/auth_client.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="7" column="9" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../flutter/SDK/bin/cache/pkg/sky_engine/lib/core/pattern.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
@@ -811,13 +797,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="91" column="15" selection-start-line="91" selection-start-column="15" selection-end-line="91" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/data/model/auth_token.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
         </state>
       </provider>
     </entry>
@@ -841,13 +820,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../../flutter/SDK/bin/cache/pkg/sky_engine/lib/convert/json.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="166" column="10" selection-start-line="166" selection-start-column="10" selection-end-line="166" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../flutter/SDK/bin/cache/pkg/sky_engine/lib/internal/list.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2250">
@@ -862,40 +834,116 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/page/sessions.dart">
+    <entry file="file://$PROJECT_DIR$/../../../flutter/SDK/bin/cache/dart-sdk/lib/core/duration.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="16" column="27" selection-start-line="16" selection-start-column="27" selection-end-line="16" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#77#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-1184">
+          <caret line="52" column="6" selection-start-line="52" selection-start-column="6" selection-end-line="52" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/network/network.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="846">
-          <caret line="47" column="26" selection-start-line="47" selection-start-column="26" selection-end-line="47" selection-end-column="26" />
+        <state relative-caret-position="552">
+          <caret line="53" selection-start-line="53" selection-end-line="53" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/network/client/session_client.dart">
+    <entry file="file://$PROJECT_DIR$/lib/network/client/auth_client.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
+        <state relative-caret-position="126">
+          <caret line="7" column="9" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../flutter/SDK/bin/cache/pkg/sky_engine/lib/convert/json.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="326">
+          <caret line="166" column="10" selection-start-line="166" selection-start-column="10" selection-end-line="166" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../flutter/SDK/packages/flutter/lib/src/widgets/framework.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="995" column="7" selection-start-line="995" selection-start-column="7" selection-end-line="995" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../flutter/SDK/bin/cache/pkg/sky_engine/lib/core/list.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="76" column="19" selection-start-line="76" selection-start-column="19" selection-end-line="76" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/network/client/session_client.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/data/model/auth_token.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/page/auth.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="151">
+          <caret line="56" column="16" selection-start-line="56" selection-start-column="10" selection-end-line="56" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#74#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../flutter/SDK/packages/flutter/lib/src/material/icons.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="84" column="25" lean-forward="true" selection-start-line="84" selection-start-column="25" selection-end-line="84" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../flutter/SDK/bin/cache/pkg/sky_engine/lib/ui/painting.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2251">
+          <caret line="87" column="6" selection-start-line="87" selection-start-column="6" selection-end-line="87" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../flutter/SDK/bin/cache/pkg/sky_engine/lib/core/date_time.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="729" column="20" selection-start-line="729" selection-start-column="20" selection-end-line="729" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/page/sessions.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="25" column="18" selection-start-line="25" selection-start-column="18" selection-end-line="25" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#66#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/data/model/session.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+        <state relative-caret-position="681">
+          <caret line="68" column="21" selection-start-line="68" selection-start-column="21" selection-end-line="68" selection-end-column="21" />
         </state>
       </provider>
     </entry>
