@@ -23,7 +23,7 @@ class _SessionsPageState extends State<SessionsPage> {
   }
 
   void addSession() {
-    getSessions();
+    Navigator.of(context).pushNamed('/AddSession');
   }
 
   void updateLoadingState(bool isLoading) {
