@@ -7,7 +7,7 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  BuildContext _scaffoldContext;
+  BuildContext buildContext;
 
   final progressKey = GlobalKey();
   final loginBtnKey = GlobalKey();
@@ -17,8 +17,8 @@ class _AuthPageState extends State<AuthPage> {
 
   bool isLoading = false;
 
-  void _login() async {
-    _updateLoadingState(true);
+  void login() async {
+    updateLoadingState(true);
 
     final email = emailController.text;
     final password = passwordController.text;
@@ -28,18 +28,18 @@ class _AuthPageState extends State<AuthPage> {
     if (isLoggedIn) {
       Navigator.of(context).pushReplacementNamed('/Sessions');
     } else {
-      _showError();
+      showError();
     }
   }
 
-  void _showError() {
-    _updateLoadingState(false);
+  void showError() {
+    updateLoadingState(false);
 
     final snackBar = SnackBar(content: Text("Authentication Error"));
-    Scaffold.of(_scaffoldContext).showSnackBar(snackBar);
+    Scaffold.of(buildContext).showSnackBar(snackBar);
   }
 
-  void _updateLoadingState(bool isLoading) {
+  void updateLoadingState(bool isLoading) {
     setState(() {
       this.isLoading = isLoading;
     });
@@ -53,7 +53,7 @@ class _AuthPageState extends State<AuthPage> {
       ),
       body: Builder(
         builder: (BuildContext context) {
-          _scaffoldContext = context;
+          buildContext = context;
           return Container(
             margin: EdgeInsets.symmetric(horizontal: 20.0),
             child: Center(
@@ -89,7 +89,7 @@ class _AuthPageState extends State<AuthPage> {
                       Opacity(
                         opacity: isLoading ? 0.0 : 1.0,
                         child: RaisedButton(
-                          onPressed: _login,
+                          onPressed: login,
                           child: Text('LOGIN'),
                         ),
                       ),

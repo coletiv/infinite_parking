@@ -1,16 +1,21 @@
 class Session {
-  final Map<String, String> plate;
-  final Map<String, String> dtStart;
-  final List<double> coordinates;
-  final Map<String, double> costTimePair;
+  final Map<String, dynamic> plate;
+  final Map<String, dynamic> dtStart;
+  final String positionToken;
+  final List<dynamic> coordinates;
+  final Map<String, dynamic> costTimePair;
 
-  const Session(
-      {this.plate, this.dtStart, this.coordinates, this.costTimePair});
+  const Session({this.plate,
+    this.dtStart,
+    this.positionToken,
+    this.coordinates,
+    this.costTimePair});
 
   factory Session.fromJson(Map<String, dynamic> json) {
     return Session(
       plate: json["plate"],
       dtStart: json['dtstart'],
+      positionToken: json["position_token"],
       coordinates: json['coordinates'],
       costTimePair: json['cost_time_pair'],
     );
@@ -19,6 +24,7 @@ class Session {
   Map<String, dynamic> toJson() => {
         'plate': plate,
         'dtstart': dtStart,
+    'position_token': positionToken,
         'coordinates': coordinates,
         'cost_time_pair': costTimePair
       };

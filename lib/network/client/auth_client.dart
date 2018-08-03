@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:coletiv_infinite_parking/data/session_manager.dart';
 import 'package:coletiv_infinite_parking/network/network.dart';
 
-final authClient = AuthClient._internal();
+final authClient = _AuthClient._internal();
 
-class AuthClient {
-  AuthClient._internal();
+class _AuthClient {
+  _AuthClient._internal();
 
   Future<bool> login(String email, String password) async {
     try {
