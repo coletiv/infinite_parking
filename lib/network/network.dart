@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:coletiv_infinite_parking/data/model/auth_token.dart';
 import 'package:coletiv_infinite_parking/data/model/session.dart';
+import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
 import 'package:coletiv_infinite_parking/data/session_manager.dart';
 import 'package:http/http.dart' as http;
 
@@ -48,6 +49,23 @@ class _Network {
       return responseJson.map((object) => Session.fromJson(object)).toList();
     } else {
       throw Exception("Couldn't get sessions");
+    }
+  }
+
+  Future<List<Vehicle>> getVehicles() async {
+    final authToken = await sessionManager.getAuthToken();
+    final accountToken = authToken.accountToken;
+    final vehiclesUrl = '$baseUrl/accounts/$accountToken/vehicles/';
+    final vehiclesHeaders = headers;
+    vehiclesHeaders['X-EOS-USER-TOKEN'] = authToken.userSessionToken;
+
+    final response = await http.get(vehiclesUrl, headers: vehiclesHeaders);
+
+    if (response.statusCode == 200) {
+      Iterable responseJson = json.decode(response.body);
+      return responseJson.map((object) => Vehicle.fromJson(object)).toList();
+    } else {
+      throw Exception("Couldn't get vehicles");
     }
   }
 }
