@@ -96,61 +96,60 @@ class _AddSessionPageState extends State<AddSessionPage> {
         builder: (BuildContext context) {
           buildContext = context;
           return Container(
-              margin: EdgeInsets.all(20.0),
-              child: SingleChildScrollView(
-                child: Column(
+            margin: EdgeInsets.all(20.0),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Text("Plate:"),
-                        DropdownButton(
-                            value: selectedVehicle?.number,
-                            items: vehicles.map((vehicle) {
-                              return DropdownMenuItem<String>(
-                                value: vehicle.number,
-                                child: SizedBox(
-                                  width: 200.0,
-                                  child: Text(vehicle.number),
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: onVehicleSelected),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Text("Municipal:"),
-                        DropdownButton(
-                            value: selectedMunicipal?.name,
-                            items: municipals.map((municipal) {
-                              return DropdownMenuItem<String>(
-                                value: municipal.name,
-                                child: Text(municipal.name),
-                              );
-                            }).toList(),
-                            onChanged: onMunicipalSelected),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Text("Zone:"),
-                        DropdownButton(
-                            value: selectedZone?.name,
-                            items: municipalZones.map((zone) {
-                              return DropdownMenuItem<String>(
-                                value: zone.name,
-                                child: Text(zone.name),
-                              );
-                            }).toList(),
-                            onChanged: onZoneSelected),
-                      ],
-                    ),
+                    Text("Plate:"),
+                    DropdownButton(
+                        value: selectedVehicle?.number,
+                        items: vehicles.map((vehicle) {
+                          return DropdownMenuItem<String>(
+                            value: vehicle.number,
+                            child: SizedBox(
+                              width: 200.0,
+                              child: Text(vehicle.number),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: onVehicleSelected),
                   ],
                 ),
-              ));
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Municipal:"),
+                    DropdownButton(
+                        value: selectedMunicipal?.name,
+                        items: municipals.map((municipal) {
+                          return DropdownMenuItem<String>(
+                            value: municipal.name,
+                            child: Text(municipal.name),
+                          );
+                        }).toList(),
+                        onChanged: onMunicipalSelected),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text("Zone:"),
+                    DropdownButton(
+                        value: selectedZone?.name,
+                        items: municipalZones.map((zone) {
+                          return DropdownMenuItem<String>(
+                            value: zone.name,
+                            child: Text(zone.name),
+                          );
+                        }).toList(),
+                        onChanged: onZoneSelected),
+                  ],
+                ),
+              ],
+            ),
+          );
         },
       ),
     );
