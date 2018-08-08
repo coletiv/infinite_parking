@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:coletiv_infinite_parking/data/model/auth_token.dart';
+import 'package:coletiv_infinite_parking/data/model/municipal.dart';
 import 'package:coletiv_infinite_parking/data/model/session.dart';
 import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
 import 'package:coletiv_infinite_parking/data/session_manager.dart';
@@ -66,6 +67,22 @@ class _Network {
       return responseJson.map((object) => Vehicle.fromJson(object)).toList();
     } else {
       throw Exception("Couldn't get vehicles");
+    }
+  }
+
+  Future<List<Municipal>> getMunicipal() async {
+    final authToken = await sessionManager.getAuthToken();
+    final municipalUrl = '$baseUrl/centers/services?type=MUNICIPAL_CONTEXT';
+    final municipalHeaders = headers;
+    municipalHeaders['X-EOS-USER-TOKEN'] = authToken.userSessionToken;
+
+    final response = await http.get(municipalUrl, headers: municipalHeaders);
+
+    if (response.statusCode == 200) {
+      Iterable responseJson = json.decode(response.body)['result'];
+      return responseJson.map((object) => Municipal.fromJson(object)).toList();
+    } else {
+      throw Exception("Couldn't get municipal");
     }
   }
 }
