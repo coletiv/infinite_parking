@@ -8,9 +8,9 @@ final municipalClient = _MunicipalClient._internal();
 class _MunicipalClient {
   _MunicipalClient._internal();
 
-  Future<List<Municipal>> getMunicipal() async {
+  Future<List<Municipal>> getMunicipals() async {
     try {
-      return await network.getMunicipal();
+      return await network.getMunicipals();
     } catch (e) {
       return List<Municipal>();
     }

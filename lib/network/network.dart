@@ -70,7 +70,7 @@ class _Network {
     }
   }
 
-  Future<List<Municipal>> getMunicipal() async {
+  Future<List<Municipal>> getMunicipals() async {
     final authToken = await sessionManager.getAuthToken();
     final municipalUrl = '$baseUrl/centers/services?type=MUNICIPAL_CONTEXT';
     final municipalHeaders = headers;
