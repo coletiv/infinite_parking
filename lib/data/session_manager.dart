@@ -20,7 +20,12 @@ class _SessionManager {
   Future<AuthToken> getAuthToken() async {
     final prefs = await SharedPreferences.getInstance();
     final String authTokenJson = await prefs.get(_authTokenKey);
-    return AuthToken.fromJson(json.decode(authTokenJson));
+
+    if (authTokenJson == null) {
+      return null;
+    } else {
+      return AuthToken.fromJson(json.decode(authTokenJson));
+    }
   }
 
   Future<bool> deleteAuthToken() async {
