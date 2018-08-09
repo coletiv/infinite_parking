@@ -14,18 +14,31 @@ final network = _Network._internal();
 class _Network {
   _Network._internal();
 
-  final baseUrl = 'https://eos.empark.com/api/v1.0';
+  final _baseUrl = 'https://eos.empark.com/api/v1.0';
 
-  final headers = {
-    'Content-Type': 'application/json',
-    'User-Agent':
-        'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.76 Mobile Safari/537.36',
-    'X-EOS-CLIENT-TOKEN': '2463bc87-6e92-480e-a56b-4260ff8b6a38'
-  };
+  Future<Map<String, String>> _getHeaders() async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'User-Agent':
+      'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.76 Mobile Safari/537.36',
+      'X-EOS-CLIENT-TOKEN': '2463bc87-6e92-480e-a56b-4260ff8b6a38'
+    };
+
+    final authToken = await sessionManager.getAuthToken();
+    final userToken = authToken.userSessionToken;
+
+    if (userToken != null) {
+      headers["X-EOS-USER-TOKEN"] = userToken;
+    }
+
+    return headers;
+  }
 
   Future<AuthToken> login(String email, String password) async {
-    final loginUrl = '$baseUrl/auth/accounts';
+    final loginUrl = '$_baseUrl/auth/accounts';
     final body = json.encode({'username': email, 'password': password});
+
+    final headers = await _getHeaders();
 
     final response = await http.post(loginUrl, headers: headers, body: body);
 
@@ -40,11 +53,9 @@ class _Network {
     final authToken = await sessionManager.getAuthToken();
     final accountToken = authToken.accountToken;
     final sessionsUrl =
-        '$baseUrl/parking/sessions?account=$accountToken&session_state=ACTIVE';
-    final sessionsHeaders = headers;
-    sessionsHeaders["X-EOS-USER-TOKEN"] = authToken.userSessionToken;
+        '$_baseUrl/parking/sessions?account=$accountToken&session_state=ACTIVE';
 
-    final response = await http.get(sessionsUrl, headers: sessionsHeaders);
+    final response = await http.get(sessionsUrl, headers: await _getHeaders());
 
     if (response.statusCode == 200) {
       Iterable responseJson = json.decode(response.body);
@@ -57,11 +68,9 @@ class _Network {
   Future<List<Vehicle>> getVehicles() async {
     final authToken = await sessionManager.getAuthToken();
     final accountToken = authToken.accountToken;
-    final vehiclesUrl = '$baseUrl/accounts/$accountToken/vehicles/';
-    final vehiclesHeaders = headers;
-    vehiclesHeaders['X-EOS-USER-TOKEN'] = authToken.userSessionToken;
+    final vehiclesUrl = '$_baseUrl/accounts/$accountToken/vehicles/';
 
-    final response = await http.get(vehiclesUrl, headers: vehiclesHeaders);
+    final response = await http.get(vehiclesUrl, headers: await _getHeaders());
 
     if (response.statusCode == 200) {
       Iterable responseJson = json.decode(response.body);
@@ -72,12 +81,9 @@ class _Network {
   }
 
   Future<List<Municipal>> getMunicipals() async {
-    final authToken = await sessionManager.getAuthToken();
-    final municipalUrl = '$baseUrl/centers/services?type=MUNICIPAL_CONTEXT';
-    final municipalHeaders = headers;
-    municipalHeaders['X-EOS-USER-TOKEN'] = authToken.userSessionToken;
+    final municipalUrl = '$_baseUrl/centers/services?type=MUNICIPAL_CONTEXT';
 
-    final response = await http.get(municipalUrl, headers: municipalHeaders);
+    final response = await http.get(municipalUrl, headers: await _getHeaders());
 
     if (response.statusCode == 200) {
       Iterable responseJson = json.decode(response.body)['result'];
@@ -88,13 +94,10 @@ class _Network {
   }
 
   Future<List<MunicipalZone>> getMunicipalZones(String municipalToken) async {
-    final authToken = await sessionManager.getAuthToken();
     final zoneUrl =
-        '$baseUrl/geo/search?context_token=$municipalToken&polygon_info=true';
-    final zoneHeaders = headers;
-    zoneHeaders['X-EOS-USER-TOKEN'] = authToken.userSessionToken;
+        '$_baseUrl/geo/search?context_token=$municipalToken&polygon_info=true';
 
-    final response = await http.get(zoneUrl, headers: zoneHeaders);
+    final response = await http.get(zoneUrl, headers: await _getHeaders());
 
     if (response.statusCode == 200) {
       Iterable responseJson = json.decode(response.body)['result'];
