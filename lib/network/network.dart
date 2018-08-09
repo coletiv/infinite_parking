@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:coletiv_infinite_parking/data/model/auth_token.dart';
+import 'package:coletiv_infinite_parking/data/model/fare.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
 import 'package:coletiv_infinite_parking/data/model/session.dart';
@@ -104,6 +105,29 @@ class _Network {
       return responseJson
           .map((object) => MunicipalZone.fromJson(object))
           .toList();
+    } else {
+      throw Exception("Couldn't get zones");
+    }
+  }
+
+  Future<Fare> getFares(MunicipalZone zone, Vehicle vehicle) async {
+    final authToken = await sessionManager.getAuthToken();
+    final accountToken = authToken.accountToken;
+    final fareUrl = '$_baseUrl/parking/fares/table/';
+
+    final body = json.encode({
+      'account_token': accountToken,
+      'type': 'MANAGED',
+      'position_token': zone.token,
+      'dtStart': {'date': DateTime.now().toIso8601String()},
+      'plate': {'id': vehicle.number, 'type': 'PT'}
+    });
+
+    final response =
+    await http.post(fareUrl, headers: await _getHeaders(), body: body);
+
+    if (response.statusCode == 200) {
+      return Fare.fromJson(json.decode(response.body));
     } else {
       throw Exception("Couldn't get zones");
     }

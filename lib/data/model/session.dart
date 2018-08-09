@@ -29,21 +29,13 @@ class Session {
         'cost_time_pair': costTimePair
       };
 
-  String getPlate() {
-    return plate['id'];
-  }
+  String getPlate() => plate['id'];
 
-  double getLatitude() {
-    return coordinates.last;
-  }
+  double getLatitude() => coordinates.last;
 
-  double getLongitude() {
-    return coordinates.first;
-  }
+  double getLongitude() => coordinates.first;
 
-  double getCost() {
-    return costTimePair['cost'];
-  }
+  double getCost() => costTimePair['cost'];
 
   Duration getDuration() {
     final int durationString = costTimePair['duration_ms'];
@@ -55,13 +47,9 @@ class Session {
     return DateTime.parse(dateString);
   }
 
-  DateTime getFinalDate() {
-    return getInitialDate().add(getDuration());
-  }
+  DateTime getFinalDate() => getInitialDate().add(getDuration());
 
-  Duration getTimeLeft() {
-    return getFinalDate().difference(DateTime.now());
-  }
+  Duration getTimeLeft() => getFinalDate().difference(DateTime.now());
 
   String getFormattedFinalDate() {
     final finalDate = getFinalDate();
