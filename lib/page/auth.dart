@@ -1,3 +1,4 @@
+import 'package:coletiv_infinite_parking/data/session_manager.dart';
 import 'package:coletiv_infinite_parking/network/client/auth_client.dart';
 import 'package:flutter/material.dart';
 
@@ -43,6 +44,13 @@ class _AuthPageState extends State<AuthPage> {
     setState(() {
       this.isLoading = isLoading;
     });
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    sessionManager.deleteAuthToken();
   }
 
   @override

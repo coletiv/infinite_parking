@@ -26,10 +26,9 @@ class _Network {
     };
 
     final authToken = await sessionManager.getAuthToken();
-    final userToken = authToken.userSessionToken;
 
-    if (userToken != null) {
-      headers["X-EOS-USER-TOKEN"] = userToken;
+    if (authToken != null) {
+      headers["X-EOS-USER-TOKEN"] = authToken.userSessionToken;
     }
 
     return headers;
@@ -39,9 +38,8 @@ class _Network {
     final loginUrl = '$_baseUrl/auth/accounts';
     final body = json.encode({'username': email, 'password': password});
 
-    final headers = await _getHeaders();
-
-    final response = await http.post(loginUrl, headers: headers, body: body);
+    final response =
+    await http.post(loginUrl, headers: await _getHeaders(), body: body);
 
     if (response.statusCode == 200) {
       return AuthToken.fromJson(json.decode(response.body));

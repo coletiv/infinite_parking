@@ -1,3 +1,4 @@
+import 'package:coletiv_infinite_parking/data/model/fare_cost.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
 import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
@@ -21,6 +22,9 @@ class _AddSessionPageState extends State<AddSessionPage> {
 
   MunicipalZone selectedZone;
   final municipalZones = List<MunicipalZone>();
+
+  FareCost selectedFare;
+  final fares = List<FareCost>();
 
   void addSession() {
     // TODO add session
@@ -51,6 +55,14 @@ class _AddSessionPageState extends State<AddSessionPage> {
     });
   }
 
+  void getFare() async {
+    final fare = await municipalClient.getFare(selectedZone, selectedVehicle);
+
+    setState(() {
+      this.fares.addAll(fare.values);
+    });
+  }
+
   void onVehicleSelected(String value) {
     setState(() {
       selectedVehicle = vehicles
@@ -78,6 +90,8 @@ class _AddSessionPageState extends State<AddSessionPage> {
     });
   }
 
+  void onFareSelected() {}
+
   @override
   void initState() {
     super.initState();
@@ -103,7 +117,9 @@ class _AddSessionPageState extends State<AddSessionPage> {
                 children: <Widget>[
                   Text("Plate:"),
                   DropdownButton(
-                      value: selectedVehicle?.number,
+                      value: selectedVehicle != null
+                          ? selectedVehicle.number
+                          : null,
                       items: vehicles.map((vehicle) {
                         return DropdownMenuItem<String>(
                           value: vehicle.number,
@@ -118,7 +134,9 @@ class _AddSessionPageState extends State<AddSessionPage> {
                 children: <Widget>[
                   Text("Municipal:"),
                   DropdownButton(
-                      value: selectedMunicipal?.name,
+                      value: selectedMunicipal != null
+                          ? selectedMunicipal.name
+                          : null,
                       items: municipals.map((municipal) {
                         return DropdownMenuItem<String>(
                           value: municipal.name,
@@ -133,7 +151,7 @@ class _AddSessionPageState extends State<AddSessionPage> {
                 children: <Widget>[
                   Text("Zone:"),
                   DropdownButton(
-                      value: selectedZone?.name,
+                      value: selectedZone != null ? selectedZone.name : null,
                       items: municipalZones.map((zone) {
                         return DropdownMenuItem<String>(
                           value: zone.name,
@@ -141,6 +159,23 @@ class _AddSessionPageState extends State<AddSessionPage> {
                             width: 200.0,
                             child: Text(zone.name),
                           ),
+                        );
+                      }).toList(),
+                      onChanged: onZoneSelected),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Text("Fare:"),
+                  DropdownButton(
+                      value: selectedFare != null
+                          ? selectedFare.cost.toString()
+                          : null,
+                      items: fares.map((fare) {
+                        return DropdownMenuItem<String>(
+                          value: fare.cost.toString(),
+                          child: Text(fare.cost.toString()),
                         );
                       }).toList(),
                       onChanged: onZoneSelected),
