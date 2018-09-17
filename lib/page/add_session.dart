@@ -4,6 +4,7 @@ import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
 import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
 import 'package:coletiv_infinite_parking/network/client/municipal_client.dart';
 import 'package:coletiv_infinite_parking/network/client/vehicle_client.dart';
+import 'package:coletiv_infinite_parking/widgets/VehicleDialog.dart';
 import 'package:flutter/material.dart';
 
 class AddSessionPage extends StatefulWidget {
@@ -14,90 +15,230 @@ class AddSessionPage extends StatefulWidget {
 class _AddSessionPageState extends State<AddSessionPage> {
   BuildContext buildContext;
 
-  Municipal selectedMunicipal;
-  final municipals = List<Municipal>();
-
+  bool areVehiclesLoading = false;
   Vehicle selectedVehicle;
-  final vehicles = List<Vehicle>();
+  List<Vehicle> vehicles;
 
+  bool areMunicipalsLoading = false;
+  Municipal selectedMunicipal;
+  List<Municipal> municipals;
+
+  bool areZonesLoading = false;
   MunicipalZone selectedZone;
-  final municipalZones = List<MunicipalZone>();
+  List<MunicipalZone> zones;
 
+  bool areFaresLoading = false;
   FareCost selectedFare;
-  final fares = List<FareCost>();
-
-  void addSession() {
-    // TODO add session
-  }
-
-  void getVehicles() async {
-    final vehicles = await vehicleClient.getVehicles();
-
-    setState(() {
-      this.vehicles.addAll(vehicles);
-    });
-  }
-
-  void getMunicipals() async {
-    final municipals = await municipalClient.getMunicipals();
-
-    setState(() {
-      this.municipals.addAll(municipals);
-    });
-  }
-
-  void getMunicipalZones() async {
-    final municipalZones =
-    await municipalClient.getMunicipalZones(selectedMunicipal.token);
-
-    setState(() {
-      this.municipalZones.addAll(municipalZones);
-    });
-  }
-
-  void getFare() async {
-    final fare = await municipalClient.getFare(selectedZone, selectedVehicle);
-
-    setState(() {
-      this.fares.addAll(fare.values);
-    });
-  }
-
-  void onVehicleSelected(String value) {
-    setState(() {
-      selectedVehicle = vehicles
-          .firstWhere((vehicle) => vehicle.number == value, orElse: () => null);
-    });
-  }
-
-  void onMunicipalSelected(String value) {
-    setState(() {
-      selectedMunicipal = municipals.firstWhere(
-              (municipal) => municipal.name == value,
-          orElse: () => null);
-
-      this.selectedZone = null;
-      this.municipalZones.clear();
-    });
-
-    getMunicipalZones();
-  }
-
-  void onZoneSelected(String value) {
-    setState(() {
-      selectedZone = municipalZones.firstWhere((zone) => zone.name == value,
-          orElse: () => null);
-    });
-  }
-
-  void onFareSelected() {}
+  List<FareCost> fares;
 
   @override
   void initState() {
     super.initState();
 
-    getVehicles();
     getMunicipals();
+  }
+
+  void getVehicles() async {
+    setState(() {
+      areVehiclesLoading = true;
+    });
+
+    final updatedVehicles = await vehicleClient.getVehicles();
+
+    setState(() {
+      vehicles = updatedVehicles;
+      areVehiclesLoading = false;
+    });
+  }
+
+  void getMunicipals() async {
+    setState(() {
+      areMunicipalsLoading = true;
+    });
+
+    final updatedMunicipals = await municipalClient.getMunicipals();
+
+    setState(() {
+      municipals = updatedMunicipals;
+      areMunicipalsLoading = false;
+    });
+  }
+
+  void getZones() async {
+    setState(() {
+      areZonesLoading = true;
+    });
+
+    final updatedZones =
+    await municipalClient.getMunicipalZones(selectedMunicipal.token);
+
+    setState(() {
+      zones = updatedZones;
+      areZonesLoading = false;
+    });
+  }
+
+  void getFares() async {
+    setState(() {
+      areFaresLoading = true;
+    });
+
+    final fare = await municipalClient.getFare(selectedZone, selectedVehicle);
+
+    setState(() {
+      fares = fare.values;
+      areFaresLoading = false;
+    });
+  }
+
+  void addSession() {
+    // TODO add session
+  }
+
+  void selectVehicle() {
+    showDialog(
+        context: context, builder: (BuildContext context) => VehicleDialog());
+  }
+
+  void selectMunicipal() {
+    if (municipals == null) {
+      getMunicipals();
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Choose the municipal:"),
+          contentPadding: EdgeInsets.symmetric(vertical: 16.0),
+          content: Stack(
+            alignment: AlignmentDirectional.center,
+            children: <Widget>[
+              Opacity(
+                opacity: areMunicipalsLoading ? 1.0 : 0.0,
+                child: CircularProgressIndicator(),
+              ),
+              Opacity(
+                opacity: areMunicipalsLoading ? 0.0 : 1.0,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: municipals.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(municipals[index].name),
+                      onTap: () {
+                        setState(() {
+                          selectedMunicipal = municipals[index];
+                        });
+
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void selectZone() {
+    if (selectedMunicipal == null) {
+      // TODO show alert saying that he must choose the municipal first
+      return;
+    } else {
+      getZones();
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Choose the zone:"),
+          contentPadding: EdgeInsets.symmetric(vertical: 16.0),
+          content: Stack(
+            alignment: AlignmentDirectional.center,
+            children: <Widget>[
+              Opacity(
+                opacity: areZonesLoading ? 1.0 : 0.0,
+                child: CircularProgressIndicator(),
+              ),
+              Opacity(
+                opacity: areZonesLoading ? 0.0 : 1.0,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: zones.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(zones[index].name),
+                      onTap: () {
+                        setState(() {
+                          selectedZone = zones[index];
+                        });
+
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void selectFare() {
+    if (selectedVehicle == null) {
+      // TODO show alert saying that he must choose the vehicle first
+      return;
+    } else if (selectedZone == null) {
+      // TODO show alert saying that he must choose the zone first
+      return;
+    } else {
+      getFares();
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Choose the fare:"),
+          contentPadding: EdgeInsets.symmetric(vertical: 16.0),
+          content: Stack(
+            alignment: AlignmentDirectional.center,
+            children: <Widget>[
+              Opacity(
+                opacity: areFaresLoading ? 1.0 : 0.0,
+                child: CircularProgressIndicator(),
+              ),
+              Opacity(
+                opacity: areFaresLoading ? 0.0 : 1.0,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: fares.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(fares[index].chargedCost.toString()),
+                      onTap: () {
+                        setState(() {
+                          selectedFare = fares[index];
+                        });
+
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -110,76 +251,33 @@ class _AddSessionPageState extends State<AddSessionPage> {
         builder: (BuildContext context) {
           buildContext = context;
           return ListView(
-            padding: EdgeInsets.all(20.0),
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Text("Plate:"),
-                  DropdownButton(
-                      value: selectedVehicle != null
-                          ? selectedVehicle.number
-                          : null,
-                      items: vehicles.map((vehicle) {
-                        return DropdownMenuItem<String>(
-                          value: vehicle.number,
-                          child: Text(vehicle.number),
-                        );
-                      }).toList(),
-                      onChanged: onVehicleSelected),
-                ],
+              ListTile(
+                title: Text("Vehicle"),
+                subtitle: Text(selectedVehicle != null
+                    ? selectedVehicle.number
+                    : "Select a vehicle"),
+                onTap: selectVehicle,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Text("Municipal:"),
-                  DropdownButton(
-                      value: selectedMunicipal != null
-                          ? selectedMunicipal.name
-                          : null,
-                      items: municipals.map((municipal) {
-                        return DropdownMenuItem<String>(
-                          value: municipal.name,
-                          child: Text(municipal.name),
-                        );
-                      }).toList(),
-                      onChanged: onMunicipalSelected),
-                ],
+              ListTile(
+                title: Text("Municipal"),
+                subtitle: Text(selectedMunicipal != null
+                    ? selectedMunicipal.name
+                    : "Select municipal"),
+                onTap: selectMunicipal,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Text("Zone:"),
-                  DropdownButton(
-                      value: selectedZone != null ? selectedZone.name : null,
-                      items: municipalZones.map((zone) {
-                        return DropdownMenuItem<String>(
-                          value: zone.name,
-                          child: SizedBox(
-                            width: 200.0,
-                            child: Text(zone.name),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: onZoneSelected),
-                ],
+              ListTile(
+                title: Text("Zone"),
+                subtitle: Text(
+                    selectedZone != null ? selectedZone.name : "Select zone"),
+                onTap: selectZone,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Text("Fare:"),
-                  DropdownButton(
-                      value: selectedFare != null
-                          ? selectedFare.cost.toString()
-                          : null,
-                      items: fares.map((fare) {
-                        return DropdownMenuItem<String>(
-                          value: fare.cost.toString(),
-                          child: Text(fare.cost.toString()),
-                        );
-                      }).toList(),
-                      onChanged: onZoneSelected),
-                ],
+              ListTile(
+                title: Text("Fare"),
+                subtitle: Text(selectedFare != null
+                    ? selectedFare.chargedCost.toString()
+                    : "Select fare"),
+                onTap: selectFare,
               ),
             ],
           );
