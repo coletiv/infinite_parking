@@ -2,12 +2,21 @@ import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
 import 'package:coletiv_infinite_parking/network/client/vehicle_client.dart';
 import 'package:flutter/material.dart';
 
-class VehicleDialog extends StatefulWidget {
+class SelectVehicleDialog extends StatefulWidget {
+  final Function(Vehicle selectedVehicle) onVehicleSelected;
+
+  const SelectVehicleDialog({this.onVehicleSelected});
+
   @override
-  State createState() => _VehicleDialogState();
+  State createState() =>
+      _SelectVehicleDialogState(onVehicleSelected: onVehicleSelected);
 }
 
-class _VehicleDialogState extends State<VehicleDialog> {
+class _SelectVehicleDialogState extends State<SelectVehicleDialog> {
+  final Function(Vehicle selectedVehicle) onVehicleSelected;
+
+  _SelectVehicleDialogState({this.onVehicleSelected});
+
   bool isLoading = false;
   Vehicle selectedVehicle;
   final vehicles = List<Vehicle>();
@@ -31,12 +40,6 @@ class _VehicleDialogState extends State<VehicleDialog> {
     });
   }
 
-  void updateSelectedVehicle(Vehicle vehicle) {
-    setState(() {
-      this.selectedVehicle = vehicle;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -48,7 +51,7 @@ class _VehicleDialogState extends State<VehicleDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text("Choose your vehicle:"),
-      contentPadding: EdgeInsets.symmetric(vertical: 16.0),
+      contentPadding: EdgeInsets.all(16.0),
       content: Stack(
         alignment: AlignmentDirectional.center,
         children: <Widget>[
@@ -63,7 +66,7 @@ class _VehicleDialogState extends State<VehicleDialog> {
           Opacity(
             opacity: !isLoading && vehicles.isNotEmpty ? 1.0 : 0.0,
             child: ListView.builder(
-              shrinkWrap: true,
+              shrinkWrap: false,
               itemCount: vehicles.length,
               itemBuilder: (context, index) {
                 return ListTile(
@@ -73,6 +76,7 @@ class _VehicleDialogState extends State<VehicleDialog> {
                       selectedVehicle = vehicles[index];
                     });
 
+                    onVehicleSelected(selectedVehicle);
                     Navigator.pop(context);
                   },
                 );
