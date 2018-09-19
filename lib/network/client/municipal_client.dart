@@ -27,9 +27,9 @@ class _MunicipalClient {
     }
   }
 
-  Future<Fare> getFare(MunicipalZone zone, Vehicle vehicle) async {
+  Future<Fare> getFare(Vehicle vehicle, MunicipalZone zone) async {
     try {
-      return await network.getFares(zone, vehicle);
+      return await network.getFares(vehicle, zone);
     } catch (e) {
       return null;
     }

@@ -108,7 +108,7 @@ class _Network {
     }
   }
 
-  Future<Fare> getFares(MunicipalZone zone, Vehicle vehicle) async {
+  Future<Fare> getFares(Vehicle vehicle, MunicipalZone zone) async {
     final authToken = await sessionManager.getAuthToken();
     final accountToken = authToken.accountToken;
     final fareUrl = '$_baseUrl/parking/fares/table/';
@@ -127,7 +127,7 @@ class _Network {
     if (response.statusCode == 200) {
       return Fare.fromJson(json.decode(response.body));
     } else {
-      throw Exception("Couldn't get zones");
+      throw Exception("Couldn't get fares");
     }
   }
 }
