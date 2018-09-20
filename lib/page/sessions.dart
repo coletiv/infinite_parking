@@ -66,7 +66,14 @@ class SessionsPageState extends State<SessionsPage> {
             child: CircularProgressIndicator(),
           ),
           Opacity(
-            opacity: _isLoading ? 0.0 : 1.0,
+            opacity: !_isLoading && _sessions.isEmpty ? 1.0 : 0.0,
+            child: Text(
+              "You have no active sessions.",
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Opacity(
+            opacity: !_isLoading && _sessions.isNotEmpty ? 1.0 : 0.0,
             child: ListView.builder(
               itemCount: _sessions.length,
               itemBuilder: (context, index) {
