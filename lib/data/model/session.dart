@@ -5,11 +5,13 @@ class Session {
   final List<dynamic> coordinates;
   final Map<String, dynamic> costTimePair;
 
-  const Session({this.plate,
+  const Session({
+    this.plate,
     this.dtStart,
     this.positionToken,
     this.coordinates,
-    this.costTimePair});
+    this.costTimePair,
+  });
 
   factory Session.fromJson(Map<String, dynamic> json) {
     return Session(
@@ -26,7 +28,7 @@ class Session {
         'dtstart': dtStart,
     'position_token': positionToken,
         'coordinates': coordinates,
-        'cost_time_pair': costTimePair
+    'cost_time_pair': costTimePair,
       };
 
   String getPlate() => plate['id'];

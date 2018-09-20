@@ -5,17 +5,24 @@ class Fare {
   final List<FareCost> values;
   final List<FareCost> simpleValues;
 
-  const Fare({this.promiseToken, this.values, this.simpleValues});
+  int simpleFareIndex;
+
+  Fare({
+    this.promiseToken,
+    this.values,
+    this.simpleValues,
+  });
 
   factory Fare.fromJson(Map<String, dynamic> json) {
     return Fare(
-        promiseToken: json['promise_token'],
-        values: json['values']
-            .map<FareCost>((object) => FareCost.fromJson(object))
-            .toList(),
-        simpleValues: json['simple_view']
-            .map<FareCost>((object) => FareCost.fromJson(object))
-            .toList());
+      promiseToken: json['promise_token'],
+      values: json['values']
+          .map<FareCost>((object) => FareCost.fromJson(object))
+          .toList(),
+      simpleValues: json['simple_view']
+          .map<FareCost>((object) => FareCost.fromJson(object))
+          .toList(),
+    );
   }
 
   Map<String, dynamic> toJson() => {
@@ -23,4 +30,11 @@ class Fare {
     'values': values.map((fareCost) => fareCost.toJson()),
     'simple_view': simpleValues.map((fareCost) => fareCost.toJson()),
   };
+
+
+  void updateSelectedSimpleFare(int simpleFareIndex) {
+    this.simpleFareIndex = simpleFareIndex;
+  }
+
+  FareCost getSelectedSimpleFare() => simpleValues[simpleFareIndex];
 }

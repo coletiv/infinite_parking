@@ -3,7 +3,11 @@ class AuthToken {
   final String userSessionToken;
   final String clientToken;
 
-  const AuthToken({this.accountToken, this.userSessionToken, this.clientToken});
+  const AuthToken({
+    this.accountToken,
+    this.userSessionToken,
+    this.clientToken,
+  });
 
   factory AuthToken.fromJson(Map<String, dynamic> json) {
     return AuthToken(
