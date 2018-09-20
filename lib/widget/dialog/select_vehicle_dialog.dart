@@ -46,7 +46,7 @@ class SelectVehicleDialogState extends State<SelectVehicleDialog> {
   }
 
   void _onVehicleSelected(Vehicle vehicle) {
-    Navigator.of(context).pop(vehicle);
+    Navigator.pop(context, vehicle);
   }
 
   Future _addVehicle() async {

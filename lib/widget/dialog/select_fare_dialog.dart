@@ -58,7 +58,7 @@ class SelectFareDialogState extends State<SelectFareDialog> {
 
   void _onFareSelected(int simpleFareIndex) {
     _fare.updateSelectedSimpleFare(simpleFareIndex);
-    Navigator.of(context).pop(_fare);
+    Navigator.pop(context, _fare);
   }
 
   @override

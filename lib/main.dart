@@ -1,6 +1,4 @@
-import 'package:coletiv_infinite_parking/page/add_session.dart';
 import 'package:coletiv_infinite_parking/page/auth.dart';
-import 'package:coletiv_infinite_parking/page/sessions.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(new MyApp());
@@ -13,11 +11,6 @@ class MyApp extends StatelessWidget {
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      routes: <String, WidgetBuilder>{
-        '/Auth': (BuildContext context) => new AuthPage(),
-        '/Sessions': (BuildContext context) => new SessionsPage(),
-        '/AddSession': (BuildContext context) => new AddSessionPage()
-      },
       home: new AuthPage(),
     );
   }

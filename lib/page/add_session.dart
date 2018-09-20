@@ -53,7 +53,8 @@ class AddSessionPageState extends State<AddSessionPage> {
   }
 
   Future _selectVehicle() async {
-    Vehicle vehicle = await Navigator.of(context).push(
+    Vehicle vehicle = await Navigator.push(
+      context,
       MaterialPageRoute<Vehicle>(
         builder: (BuildContext context) {
           return SelectVehicleDialog(selectedVehicle: _selectedVehicle);
@@ -77,7 +78,8 @@ class AddSessionPageState extends State<AddSessionPage> {
   }
 
   Future _selectMunicipal() async {
-    Municipal municipal = await Navigator.of(context).push(
+    Municipal municipal = await Navigator.push(
+      context,
       MaterialPageRoute<Municipal>(
         builder: (BuildContext context) {
           return SelectMunicipalDialog(selectedMunicipal: _selectedMunicipal);
@@ -111,7 +113,8 @@ class AddSessionPageState extends State<AddSessionPage> {
   }
 
   Future _showZoneSelectionDialog() async {
-    MunicipalZone zone = await Navigator.of(context).push(
+    MunicipalZone zone = await Navigator.push(
+      context,
       MaterialPageRoute<MunicipalZone>(
         builder: (BuildContext context) {
           return SelectZoneDialog(
@@ -148,7 +151,8 @@ class AddSessionPageState extends State<AddSessionPage> {
   }
 
   Future _showFareSelectionDialog() async {
-    Fare fare = await Navigator.of(context).push(
+    Fare fare = await Navigator.push(
+      context,
       MaterialPageRoute<Fare>(
         builder: (BuildContext context) {
           return SelectFareDialog(

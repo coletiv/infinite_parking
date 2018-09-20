@@ -50,7 +50,7 @@ class SelectZoneDialogState extends State<SelectZoneDialog> {
   }
 
   void _onZoneSelected(MunicipalZone zone) {
-    Navigator.of(context).pop(zone);
+    Navigator.pop(context, zone);
   }
 
   @override

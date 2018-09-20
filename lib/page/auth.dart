@@ -1,5 +1,6 @@
 import 'package:coletiv_infinite_parking/data/session_manager.dart';
 import 'package:coletiv_infinite_parking/network/client/auth_client.dart';
+import 'package:coletiv_infinite_parking/page/sessions.dart';
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {
@@ -32,7 +33,12 @@ class AuthPageState extends State<AuthPage> {
     // TODO save email and password to handle session expiration
 
     if (isLoggedIn) {
-      Navigator.of(context).pushReplacementNamed('/Sessions');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SessionsPage(),
+        ),
+      );
     } else {
       _showError();
     }

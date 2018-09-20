@@ -44,7 +44,7 @@ class SelectMunicipalDialogState extends State<SelectMunicipalDialog> {
   }
 
   void _onMunicipalSelected(Municipal municipal) {
-    Navigator.of(context).pop(municipal);
+    Navigator.pop(context, municipal);
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:coletiv_infinite_parking/data/model/session.dart';
 import 'package:coletiv_infinite_parking/network/client/session_client.dart';
+import 'package:coletiv_infinite_parking/page/add_session.dart';
 import 'package:flutter/material.dart';
 
 class SessionsPage extends StatefulWidget {
@@ -31,7 +32,12 @@ class SessionsPageState extends State<SessionsPage> {
   }
 
   void _addSession() {
-    Navigator.of(context).pushNamed('/AddSession');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddSessionPage(),
+      ),
+    );
   }
 
   void _updateLoadingState(bool isLoading) {
