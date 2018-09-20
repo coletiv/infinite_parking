@@ -37,7 +37,9 @@ class SessionsPageState extends State<SessionsPage> {
       MaterialPageRoute(
         builder: (context) => AddSessionPage(),
       ),
-    );
+    ).whenComplete(() {
+      _getSessions();
+    });
   }
 
   void _updateLoadingState(bool isLoading) {
