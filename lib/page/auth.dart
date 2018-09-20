@@ -4,52 +4,63 @@ import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {
   @override
-  _AuthPageState createState() => _AuthPageState();
+  AuthPageState createState() => AuthPageState();
 }
 
-class _AuthPageState extends State<AuthPage> {
-  BuildContext buildContext;
-
-  final progressKey = GlobalKey();
-  final loginBtnKey = GlobalKey();
-
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  bool isLoading = false;
-
-  void login() async {
-    updateLoadingState(true);
-
-    final email = emailController.text;
-    final password = passwordController.text;
-
-    final isLoggedIn = await authClient.login(email, password);
-
-    if (isLoggedIn) {
-      Navigator.of(context).pushReplacementNamed('/Sessions');
-    } else {
-      showError();
-    }
-  }
-
-  void showError() {
-    updateLoadingState(false);
-
-    final snackBar = SnackBar(content: Text("Authentication Error"));
-    Scaffold.of(buildContext).showSnackBar(snackBar);
-  }
-
-  void updateLoadingState(bool isLoading) {
-    setState(() {
-      this.isLoading = isLoading;
-    });
-  }
-
+class AuthPageState extends State<AuthPage> {
   @override
   void initState() {
     super.initState();
     sessionManager.deleteAuthToken();
+  }
+
+  BuildContext _context;
+
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  bool _isLoading = false;
+
+  void _login() async {
+    _updateLoadingState(true);
+
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    final isLoggedIn = await authClient.login(email, password);
+
+    // TODO save email and password to handle session expiration
+
+    if (isLoggedIn) {
+      Navigator.of(context).pushReplacementNamed('/Sessions');
+    } else {
+      _showError();
+    }
+  }
+
+  void _showError() {
+    _updateLoadingState(false);
+
+    Scaffold.of(_context).showSnackBar(
+      SnackBar(
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.red,
+        content: Text("Authentication failed."),
+      ),
+    );
+  }
+
+  void _updateLoadingState(bool isLoading) {
+    setState(() {
+      this._isLoading = isLoading;
+    });
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -60,7 +71,7 @@ class _AuthPageState extends State<AuthPage> {
       ),
       body: Builder(
         builder: (BuildContext context) {
-          buildContext = context;
+          _context = context;
           return Container(
             margin: EdgeInsets.symmetric(horizontal: 20.0),
             child: Center(
@@ -71,7 +82,7 @@ class _AuthPageState extends State<AuthPage> {
                     margin: EdgeInsets.only(bottom: 16.0),
                     child: TextField(
                       maxLines: 1,
-                      controller: emailController,
+                      controller: _emailController,
                       decoration: InputDecoration(
                         hintText: 'Email',
                       ),
@@ -82,7 +93,7 @@ class _AuthPageState extends State<AuthPage> {
                     child: TextField(
                       maxLines: 1,
                       obscureText: true,
-                      controller: passwordController,
+                      controller: _passwordController,
                       decoration: InputDecoration(hintText: 'Password'),
                     ),
                   ),
@@ -90,13 +101,13 @@ class _AuthPageState extends State<AuthPage> {
                     alignment: AlignmentDirectional.center,
                     children: <Widget>[
                       Opacity(
-                        opacity: isLoading ? 1.0 : 0.0,
+                        opacity: _isLoading ? 1.0 : 0.0,
                         child: CircularProgressIndicator(),
                       ),
                       Opacity(
-                        opacity: isLoading ? 0.0 : 1.0,
+                        opacity: _isLoading ? 0.0 : 1.0,
                         child: RaisedButton(
-                          onPressed: login,
+                          onPressed: _login,
                           child: Text('LOGIN'),
                         ),
                       ),
@@ -109,12 +120,5 @@ class _AuthPageState extends State<AuthPage> {
         },
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
   }
 }

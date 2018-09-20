@@ -11,11 +11,8 @@ class SessionsPageState extends State<SessionsPage> {
   @override
   void initState() {
     super.initState();
-
     _getSessions();
   }
-
-  BuildContext _context;
 
   bool _isLoading = false;
   final List<Session> _sessions = List<Session>();
@@ -55,35 +52,30 @@ class SessionsPageState extends State<SessionsPage> {
           )
         ],
       ),
-      body: Builder(
-        builder: (BuildContext context) {
-          _context = context;
-          return Stack(
-            alignment: AlignmentDirectional.center,
-            children: <Widget>[
-              Opacity(
-                opacity: _isLoading ? 1.0 : 0.0,
-                child: CircularProgressIndicator(),
-              ),
-              Opacity(
-                opacity: _isLoading ? 0.0 : 1.0,
-                child: ListView.builder(
-                  itemCount: _sessions.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(
-                        _sessions[index].getPlate(),
-                      ),
-                      subtitle: Text(
-                        _sessions[index].getFormattedFinalDate(),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        },
+      body: Stack(
+        alignment: AlignmentDirectional.center,
+        children: <Widget>[
+          Opacity(
+            opacity: _isLoading ? 1.0 : 0.0,
+            child: CircularProgressIndicator(),
+          ),
+          Opacity(
+            opacity: _isLoading ? 0.0 : 1.0,
+            child: ListView.builder(
+              itemCount: _sessions.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(
+                    _sessions[index].getPlate(),
+                  ),
+                  subtitle: Text(
+                    _sessions[index].getFormattedFinalDate(),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
