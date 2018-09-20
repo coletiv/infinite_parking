@@ -1,90 +1,153 @@
+import 'dart:async';
+
 import 'package:coletiv_infinite_parking/data/model/fare_cost.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
 import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
-import 'package:coletiv_infinite_parking/widgets/SelectFareDialog.dart';
-import 'package:coletiv_infinite_parking/widgets/SelectMunicipalDialog.dart';
-import 'package:coletiv_infinite_parking/widgets/SelectVehicleDialog.dart';
-import 'package:coletiv_infinite_parking/widgets/SelectZoneDialog.dart';
+import 'package:coletiv_infinite_parking/widget/dialog/select_fare_dialog.dart';
+import 'package:coletiv_infinite_parking/widget/dialog/select_municipal_dialog.dart';
+import 'package:coletiv_infinite_parking/widget/dialog/select_vehicle_dialog.dart';
+import 'package:coletiv_infinite_parking/widget/dialog/select_zone_dialog.dart';
 import 'package:flutter/material.dart';
 
 class AddSessionPage extends StatefulWidget {
   @override
-  State createState() => _AddSessionPageState();
+  State createState() => AddSessionPageState();
 }
 
-class _AddSessionPageState extends State<AddSessionPage> {
-  BuildContext buildContext;
+class AddSessionPageState extends State<AddSessionPage> {
+  BuildContext _context;
 
-  Vehicle selectedVehicle;
-  Municipal selectedMunicipal;
-  MunicipalZone selectedZone;
-  FareCost selectedFare;
+  Vehicle _selectedVehicle;
+  Municipal _selectedMunicipal;
+  MunicipalZone _selectedZone;
+  FareCost _selectedFare;
 
-  void addSession() {
+  void _addSession() {
     // TODO add session
   }
 
-  void selectVehicle() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) =>
-            SelectVehicleDialog(onVehicleSelected: (Vehicle vehicle) {
-              setState(() {
-                selectedVehicle = vehicle;
-              });
-            }));
+  Future _selectVehicle() async {
+    Vehicle vehicle = await Navigator.of(context).push(
+      MaterialPageRoute<Vehicle>(
+        builder: (BuildContext context) {
+          return SelectVehicleDialog(selectedVehicle: _selectedVehicle);
+        },
+        fullscreenDialog: true,
+      ),
+    );
+
+    if (vehicle != null) {
+      _onVehicleSelected(vehicle);
+    }
   }
 
-  void selectMunicipal() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) =>
-            SelectMunicipalDialog(onMunicipalSelected: (Municipal municipal) {
-              setState(() {
-                selectedMunicipal = municipal;
-              });
-            }));
+  void _onVehicleSelected(Vehicle vehicle) {
+    setState(() {
+      if (_selectedVehicle != null && _selectedVehicle.token != vehicle.token) {
+        _selectedFare = null;
+      }
+      _selectedVehicle = vehicle;
+    });
   }
 
-  void selectZone() {
-    if (selectedMunicipal == null) {
+  Future _selectMunicipal() async {
+    Municipal municipal = await Navigator.of(context).push(
+      MaterialPageRoute<Municipal>(
+        builder: (BuildContext context) {
+          return SelectMunicipalDialog(selectedMunicipal: _selectedMunicipal);
+        },
+        fullscreenDialog: true,
+      ),
+    );
+
+    if (municipal != null) {
+      _onMunicipalSelected(municipal);
+    }
+  }
+
+  void _onMunicipalSelected(Municipal municipal) {
+    setState(() {
+      if (_selectedMunicipal != null &&
+          _selectedMunicipal.token != municipal.token) {
+        _selectedZone = null;
+        _selectedFare = null;
+      }
+      _selectedMunicipal = municipal;
+    });
+  }
+
+  void _selectZone() {
+    if (_selectedMunicipal == null) {
       // TODO show alert saying that he must choose the municipal first
       return;
     } else {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) =>
-              SelectZoneDialog(
-                  selectedMunicipal: selectedMunicipal,
-                  onZoneSelected: (MunicipalZone zone) {
-                    setState(() {
-                      selectedZone = zone;
-                    });
-                  }));
+      _showZoneSelectionDialog();
     }
   }
 
-  void selectFare() {
-    if (selectedVehicle == null) {
+  Future _showZoneSelectionDialog() async {
+    MunicipalZone zone = await Navigator.of(context).push(
+      MaterialPageRoute<MunicipalZone>(
+        builder: (BuildContext context) {
+          return SelectZoneDialog(
+            selectedMunicipal: _selectedMunicipal,
+            selectedZone: _selectedZone,
+          );
+        },
+        fullscreenDialog: true,
+      ),
+    );
+
+    if (zone != null) {
+      _onZoneSelected(zone);
+    }
+  }
+
+  void _onZoneSelected(MunicipalZone zone) {
+    setState(() {
+      if (_selectedZone != null && _selectedZone.token != zone.token) {
+        _selectedFare = null;
+      }
+      _selectedZone = zone;
+    });
+  }
+
+  void _selectFare() {
+    if (_selectedVehicle == null) {
       // TODO show alert saying that he must choose the vehicle first
       return;
-    } else if (selectedZone == null) {
+    } else if (_selectedZone == null) {
       // TODO show alert saying that he must choose the zone first
       return;
     } else {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) =>
-              SelectFareDialog(
-                  selectedVehicle: selectedVehicle,
-                  selectedZone: selectedZone,
-                  onFareSelected: (FareCost fare) {
-                    setState(() {
-                      selectedFare = fare;
-                    });
-                  }));
+      _showFareSelectionDialog();
     }
+  }
+
+  Future _showFareSelectionDialog() async {
+    FareCost fare = await Navigator.of(context).push(
+      MaterialPageRoute<FareCost>(
+        builder: (BuildContext context) {
+          return SelectFareDialog(
+            selectedVehicle: _selectedVehicle,
+            selectedZone: _selectedZone,
+            selectedFare: _selectedFare,
+          );
+        },
+        fullscreenDialog: true,
+      ),
+    );
+
+    if (fare != null) {
+      _onFareSelected(fare);
+    }
+  }
+
+  void _onFareSelected(FareCost fare) {
+    setState(() {
+      _selectedFare = fare;
+    });
   }
 
   @override
@@ -95,37 +158,41 @@ class _AddSessionPageState extends State<AddSessionPage> {
       ),
       body: Builder(
         builder: (BuildContext context) {
-          buildContext = context;
+          _context = context;
           return ListView(
             children: <Widget>[
               ListTile(
                 title: Text("Vehicle"),
-                subtitle: Text(selectedVehicle != null
-                    ? selectedVehicle.number
+                trailing: Icon(Icons.arrow_right),
+                subtitle: Text(_selectedVehicle != null
+                    ? _selectedVehicle.number
                     : "Select a vehicle"),
-                onTap: selectVehicle,
+                onTap: _selectVehicle,
               ),
               ListTile(
                 title: Text("Municipal"),
-                subtitle: Text(selectedMunicipal != null
-                    ? selectedMunicipal.name
+                trailing: Icon(Icons.arrow_right),
+                subtitle: Text(_selectedMunicipal != null
+                    ? _selectedMunicipal.name
                     : "Select municipal"),
-                onTap: selectMunicipal,
+                onTap: _selectMunicipal,
               ),
               ListTile(
                 title: Text("Zone"),
+                trailing: Icon(Icons.arrow_right),
                 subtitle: Text(
-                    selectedZone != null ? selectedZone.name : "Select zone"),
-                onTap: selectZone,
+                    _selectedZone != null ? _selectedZone.name : "Select zone"),
+                onTap: _selectZone,
               ),
               ListTile(
                 title: Text("Fare"),
-                subtitle: Text(selectedFare != null
-                    ? "${selectedFare.cost}€ - Duration: ${selectedFare
+                trailing: Icon(Icons.arrow_right),
+                subtitle: Text(_selectedFare != null
+                    ? "${_selectedFare.cost}€ - Duration: ${_selectedFare
                     .getChargedDuration()
                     .inMinutes}"
                     : "Select fare"),
-                onTap: selectFare,
+                onTap: _selectFare,
               ),
             ],
           );
