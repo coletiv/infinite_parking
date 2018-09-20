@@ -4,45 +4,43 @@ import 'package:flutter/material.dart';
 
 class SessionsPage extends StatefulWidget {
   @override
-  State createState() => _SessionsPageState();
+  SessionsPageState createState() => SessionsPageState();
 }
 
-class _SessionsPageState extends State<SessionsPage> {
-  BuildContext buildContext;
-
-  bool isLoading = false;
-
-  List<Session> sessions = List<Session>();
-
-  void getSessions() async {
-    updateLoadingState(true);
-
-    List<Session> userSessions = await sessionClient.getSessions();
-
-    showSessions(userSessions);
-  }
-
-  void addSession() {
-    Navigator.of(context).pushNamed('/AddSession');
-  }
-
-  void updateLoadingState(bool isLoading) {
-    setState(() {
-      this.isLoading = isLoading;
-    });
-  }
-
-  void showSessions(List<Session> sessions) {
-    setState(() {
-      this.isLoading = false;
-      this.sessions = sessions;
-    });
-  }
-
+class SessionsPageState extends State<SessionsPage> {
   @override
   void initState() {
     super.initState();
-    getSessions();
+
+    _getSessions();
+  }
+
+  BuildContext _context;
+
+  bool _isLoading = false;
+  final List<Session> _sessions = List<Session>();
+
+  void _getSessions() async {
+    _updateLoadingState(true);
+
+    List<Session> sessions = await sessionClient.getSessions();
+
+    setState(() {
+      _sessions.clear();
+      _sessions.addAll(sessions);
+    });
+
+    _updateLoadingState(false);
+  }
+
+  void _addSession() {
+    Navigator.of(context).pushNamed('/AddSession');
+  }
+
+  void _updateLoadingState(bool isLoading) {
+    setState(() {
+      this._isLoading = isLoading;
+    });
   }
 
   @override
@@ -50,28 +48,34 @@ class _SessionsPageState extends State<SessionsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Sessions'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: _getSessions,
+          )
+        ],
       ),
       body: Builder(
         builder: (BuildContext context) {
-          buildContext = context;
+          _context = context;
           return Stack(
             alignment: AlignmentDirectional.center,
             children: <Widget>[
               Opacity(
-                opacity: isLoading ? 1.0 : 0.0,
+                opacity: _isLoading ? 1.0 : 0.0,
                 child: CircularProgressIndicator(),
               ),
               Opacity(
-                opacity: isLoading ? 0.0 : 1.0,
+                opacity: _isLoading ? 0.0 : 1.0,
                 child: ListView.builder(
-                  itemCount: sessions.length,
+                  itemCount: _sessions.length,
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(
-                        sessions[index].getPlate(),
+                        _sessions[index].getPlate(),
                       ),
                       subtitle: Text(
-                        sessions[index].getFormattedFinalDate(),
+                        _sessions[index].getFormattedFinalDate(),
                       ),
                     );
                   },
@@ -83,7 +87,7 @@ class _SessionsPageState extends State<SessionsPage> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: addSession,
+        onPressed: _addSession,
       ),
     );
   }

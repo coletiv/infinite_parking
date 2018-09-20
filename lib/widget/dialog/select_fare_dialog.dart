@@ -1,3 +1,4 @@
+import 'package:coletiv_infinite_parking/data/model/fare.dart';
 import 'package:coletiv_infinite_parking/data/model/fare_cost.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
 import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 class SelectFareDialog extends StatefulWidget {
   final Vehicle selectedVehicle;
   final MunicipalZone selectedZone;
-  final FareCost selectedFare;
+  final Fare selectedFare;
 
   const SelectFareDialog({
     @required this.selectedVehicle,
@@ -24,25 +25,26 @@ class SelectFareDialogState extends State<SelectFareDialog> {
   void initState() {
     super.initState();
 
-    _getFares();
-    _selectedFare = widget.selectedFare;
+    if (widget.selectedFare != null) {
+      setState(() {
+        _fare = widget.selectedFare;
+      });
+    } else {
+      _getFares();
+    }
   }
 
   bool _isLoading = false;
-  FareCost _selectedFare;
-  final _fares = List<FareCost>();
+  Fare _fare;
 
   void _getFares() async {
     _updateLoadingState(true);
 
-    final fare = await municipalClient.getFare(
+    Fare fare = await municipalClient.getFare(
         widget.selectedVehicle, widget.selectedZone);
 
     setState(() {
-      _fares.clear();
-      if (fare != null) {
-        _fares.addAll(fare.simpleValues);
-      }
+      _fare = fare;
     });
 
     _updateLoadingState(false);
@@ -54,8 +56,9 @@ class SelectFareDialogState extends State<SelectFareDialog> {
     });
   }
 
-  void _onFareSelected(FareCost fare) {
-    Navigator.of(context).pop(fare);
+  void _onFareSelected(int simpleFareIndex) {
+    _fare.updateSelectedSimpleFare(simpleFareIndex);
+    Navigator.of(context).pop(_fare);
   }
 
   @override
@@ -72,21 +75,27 @@ class SelectFareDialogState extends State<SelectFareDialog> {
             child: CircularProgressIndicator(),
           ),
           Opacity(
-            opacity: !_isLoading && _fares.isEmpty ? 1.0 : 0.0,
+            opacity:
+            !_isLoading && (_fare == null || _fare.simpleValues.isEmpty)
+                ? 1.0
+                : 0.0,
             child: Text(
               "Some error happened trying to load fares. Please try again later.",
               textAlign: TextAlign.center,
             ),
           ),
           Opacity(
-            opacity: !_isLoading && _fares.isNotEmpty ? 1.0 : 0.0,
+            opacity:
+            !_isLoading && _fare != null && _fare.simpleValues.isNotEmpty
+                ? 1.0
+                : 0.0,
             child: ListView.builder(
               shrinkWrap: false,
-              itemCount: _fares.length,
+              itemCount: _fare == null ? 0 : _fare.simpleValues.length,
               itemBuilder: (context, index) {
-                FareCost fare = _fares[index];
-                bool isSelected = _selectedFare != null
-                    ? _selectedFare.chargedDuration == fare.chargedDuration
+                FareCost fare = _fare.simpleValues[index];
+                bool isSelected = _fare.simpleFareIndex != null
+                    ? _fare.simpleFareIndex == index
                     : false;
                 String cost = "${fare.cost.toString()}€";
                 String duration =
@@ -97,9 +106,9 @@ class SelectFareDialogState extends State<SelectFareDialog> {
                   subtitle: Text(duration),
                   selected: isSelected,
                   trailing:
-                      isSelected ? Icon(Icons.check) : Icon(Icons.arrow_right),
+                  isSelected ? Icon(Icons.check) : Icon(Icons.arrow_right),
                   onTap: () {
-                    _onFareSelected(fare);
+                    _onFareSelected(index);
                   },
                 );
               },

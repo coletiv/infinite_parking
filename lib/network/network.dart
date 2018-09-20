@@ -38,8 +38,11 @@ class _Network {
     final loginUrl = '$_baseUrl/auth/accounts';
     final body = json.encode({'username': email, 'password': password});
 
-    final response =
-    await http.post(loginUrl, headers: await _getHeaders(), body: body);
+    final response = await http.post(
+      loginUrl,
+      headers: await _getHeaders(),
+      body: body,
+    );
 
     if (response.statusCode == 200) {
       return AuthToken.fromJson(json.decode(response.body));
@@ -54,7 +57,10 @@ class _Network {
     final sessionsUrl =
         '$_baseUrl/parking/sessions?account=$accountToken&session_state=ACTIVE';
 
-    final response = await http.get(sessionsUrl, headers: await _getHeaders());
+    final response = await http.get(
+      sessionsUrl,
+      headers: await _getHeaders(),
+    );
 
     if (response.statusCode == 200) {
       Iterable responseJson = json.decode(response.body);
@@ -64,12 +70,54 @@ class _Network {
     }
   }
 
+  Future<Session> addSession(Vehicle vehicle, MunicipalZone zone,
+      Fare fare) async {
+    final authToken = await sessionManager.getAuthToken();
+    final accountToken = authToken.accountToken;
+
+    final body = json.encode({
+      'account_token': accountToken,
+      'cost_time_pair': {
+        'cost': fare
+            .getSelectedSimpleFare()
+            .cost,
+        'charged_duration_ms': fare
+            .getSelectedSimpleFare()
+            .chargedDuration,
+      },
+      'plate': {
+        'id': vehicle.number,
+        'type': vehicle.country,
+      },
+      'position_token': zone.token,
+      'promise_token': fare.promiseToken,
+      'type': 'MANAGED'
+    });
+
+    final addSessionUrl = '$_baseUrl/parking/sessions/';
+
+    final response = await http.post(
+      addSessionUrl,
+      headers: await _getHeaders(),
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      Session.fromJson(json.decode(response.body));
+    } else {
+      throw Exception("Couldn't create session");
+    }
+  }
+
   Future<List<Vehicle>> getVehicles() async {
     final authToken = await sessionManager.getAuthToken();
     final accountToken = authToken.accountToken;
     final vehiclesUrl = '$_baseUrl/accounts/$accountToken/vehicles/';
 
-    final response = await http.get(vehiclesUrl, headers: await _getHeaders());
+    final response = await http.get(
+      vehiclesUrl,
+      headers: await _getHeaders(),
+    );
 
     if (response.statusCode == 200) {
       Iterable responseJson = json.decode(response.body);
@@ -82,7 +130,10 @@ class _Network {
   Future<List<Municipal>> getMunicipals() async {
     final municipalUrl = '$_baseUrl/centers/services?type=MUNICIPAL_CONTEXT';
 
-    final response = await http.get(municipalUrl, headers: await _getHeaders());
+    final response = await http.get(
+      municipalUrl,
+      headers: await _getHeaders(),
+    );
 
     if (response.statusCode == 200) {
       Iterable responseJson = json.decode(response.body)['result'];
@@ -96,7 +147,10 @@ class _Network {
     final zoneUrl =
         '$_baseUrl/geo/search?context_token=$municipalToken&polygon_info=true';
 
-    final response = await http.get(zoneUrl, headers: await _getHeaders());
+    final response = await http.get(
+      zoneUrl,
+      headers: await _getHeaders(),
+    );
 
     if (response.statusCode == 200) {
       Iterable responseJson = json.decode(response.body)['result'];
@@ -121,8 +175,11 @@ class _Network {
       'plate': {'id': vehicle.number, 'type': 'PT'}
     });
 
-    final response =
-    await http.post(fareUrl, headers: await _getHeaders(), body: body);
+    final response = await http.post(
+      fareUrl,
+      headers: await _getHeaders(),
+      body: body,
+    );
 
     if (response.statusCode == 200) {
       return Fare.fromJson(json.decode(response.body));
