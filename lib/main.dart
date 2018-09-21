@@ -1,6 +1,5 @@
+import 'package:coletiv_infinite_parking/page/auth.dart';
 import 'package:flutter/material.dart';
-
-import 'page/auth.dart';
 
 void main() => runApp(new MyApp());
 
