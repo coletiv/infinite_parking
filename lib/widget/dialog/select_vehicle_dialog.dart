@@ -22,6 +22,8 @@ class SelectVehicleDialogState extends State<SelectVehicleDialog> {
     _selectedVehicle = widget.selectedVehicle;
   }
 
+  // TODO: create modal to add vehicle
+
   bool _isLoading = false;
   Vehicle _selectedVehicle;
   final _vehicles = List<Vehicle>();
@@ -49,19 +51,11 @@ class SelectVehicleDialogState extends State<SelectVehicleDialog> {
     Navigator.pop(context, vehicle);
   }
 
-  Future _addVehicle() async {
-    // TODO create modal to add vehicle
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Select your vehicle"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: _addVehicle,
       ),
       body: Stack(
         alignment: AlignmentDirectional.center,
