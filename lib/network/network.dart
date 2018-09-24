@@ -103,7 +103,7 @@ class _Network {
     );
 
     if (response.statusCode == 200) {
-      Session.fromJson(json.decode(response.body));
+      return Session.fromJson(json.decode(response.body));
     } else {
       throw Exception("Couldn't create session");
     }
