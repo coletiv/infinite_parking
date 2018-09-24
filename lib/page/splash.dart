@@ -20,8 +20,17 @@ class SplashPageState extends State<SplashPage> {
     final email = await sessionManager.getEmail();
     final password = await sessionManager.getPassword();
 
+    if (email == null || password == null) {
+      _redirectUser(false);
+      return;
+    }
+
     final isLoggedIn = await authClient.login(email, password);
 
+    _redirectUser(isLoggedIn);
+  }
+
+  void _redirectUser(bool isLoggedIn) {
     if (isLoggedIn) {
       Navigator.pushReplacement(
         context,
@@ -43,6 +52,7 @@ class SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.white,
       child: Center(
         child: CircularProgressIndicator(),
       ),
