@@ -44,8 +44,10 @@ class _Network {
       body: body,
     );
 
+    final responseBody = utf8.decode(response.bodyBytes);
+
     if (response.statusCode == 200) {
-      return AuthToken.fromJson(json.decode(response.body));
+      return AuthToken.fromJson(json.decode(responseBody));
     } else {
       throw Exception("Authentication failed");
     }
@@ -62,8 +64,10 @@ class _Network {
       headers: await _getHeaders(),
     );
 
+    final responseBody = utf8.decode(response.bodyBytes);
+
     if (response.statusCode == 200) {
-      Iterable responseJson = json.decode(response.body);
+      Iterable responseJson = json.decode(responseBody);
       return responseJson.map((object) => Session.fromJson(object)).toList();
     } else {
       throw Exception("Couldn't get sessions");
@@ -102,8 +106,10 @@ class _Network {
       body: body,
     );
 
+    final responseBody = utf8.decode(response.bodyBytes);
+
     if (response.statusCode == 200) {
-      return Session.fromJson(json.decode(response.body));
+      return Session.fromJson(json.decode(responseBody));
     } else {
       throw Exception("Couldn't create session");
     }
@@ -119,8 +125,10 @@ class _Network {
       headers: await _getHeaders(),
     );
 
+    final responseBody = utf8.decode(response.bodyBytes);
+
     if (response.statusCode == 200) {
-      Iterable responseJson = json.decode(response.body);
+      Iterable responseJson = json.decode(responseBody);
       return responseJson.map((object) => Vehicle.fromJson(object)).toList();
     } else {
       throw Exception("Couldn't get vehicles");
@@ -135,8 +143,10 @@ class _Network {
       headers: await _getHeaders(),
     );
 
+    final responseBody = utf8.decode(response.bodyBytes);
+
     if (response.statusCode == 200) {
-      Iterable responseJson = json.decode(response.body)['result'];
+      Iterable responseJson = json.decode(responseBody)['result'];
       return responseJson.map((object) => Municipal.fromJson(object)).toList();
     } else {
       throw Exception("Couldn't get municipals");
@@ -152,8 +162,10 @@ class _Network {
       headers: await _getHeaders(),
     );
 
+    final responseBody = utf8.decode(response.bodyBytes);
+
     if (response.statusCode == 200) {
-      Iterable responseJson = json.decode(response.body)['result'];
+      Iterable responseJson = json.decode(responseBody)['result'];
       return responseJson
           .map((object) => MunicipalZone.fromJson(object))
           .toList();
@@ -181,8 +193,10 @@ class _Network {
       body: body,
     );
 
+    final responseBody = utf8.decode(response.bodyBytes);
+
     if (response.statusCode == 200) {
-      return Fare.fromJson(json.decode(response.body));
+      return Fare.fromJson(json.decode(responseBody));
     } else {
       throw Exception("Couldn't get fares");
     }
