@@ -12,6 +12,8 @@ import 'package:http/http.dart' as http;
 
 final network = _Network._internal();
 
+DateTime retryDate;
+
 class _Network {
   _Network._internal();
 
@@ -34,7 +36,7 @@ class _Network {
     return headers;
   }
 
-  Future<AuthToken> login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     final loginUrl = '$_baseUrl/auth/accounts';
     final body = json.encode({'username': email, 'password': password});
 
@@ -47,9 +49,65 @@ class _Network {
     final responseBody = utf8.decode(response.bodyBytes);
 
     if (response.statusCode == 200) {
-      return AuthToken.fromJson(json.decode(responseBody));
+      AuthToken authToken = AuthToken.fromJson(json.decode(responseBody));
+      return await sessionManager.saveSession(authToken, email, password);
     } else {
       throw Exception("Authentication failed");
+    }
+  }
+
+  Future<bool> refreshToken() async {
+    final loginUrl = '$_baseUrl/auth/accounts';
+    final email = await sessionManager.getEmail();
+    final password = await sessionManager.getPassword();
+
+    await sessionManager.deleteSession();
+
+    if (email == null || password == null) {
+      return false;
+    }
+
+    final body = json.encode({'username': email, 'password': password});
+
+    final response = await http.post(
+      loginUrl,
+      headers: await _getHeaders(),
+      body: body,
+    );
+
+    final responseBody = utf8.decode(response.bodyBytes);
+
+    if (response.statusCode == 200) {
+      AuthToken authToken = AuthToken.fromJson(json.decode(responseBody));
+      return await sessionManager.saveSession(authToken, email, password);
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> _canRetry(String responseBody) async {
+    // Checks if a retry was performed in the last 5 minutes
+    if (retryDate != null &&
+        DateTime.now().difference(retryDate).inMinutes < 5) {
+      return false;
+    }
+
+    // Checks if the request failed because of a invalid token
+    if (!responseBody.contains("authenticationFailed") ||
+        !responseBody.contains("invalid token")) {
+      return false;
+    }
+
+    retryDate = DateTime.now();
+
+    // Refreshes the user token
+    final isLoggedIn = await refreshToken();
+
+    // If the user token was refreshed successfully we can perform a retry
+    if (isLoggedIn) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -69,25 +127,23 @@ class _Network {
     if (response.statusCode == 200) {
       Iterable responseJson = json.decode(responseBody);
       return responseJson.map((object) => Session.fromJson(object)).toList();
+    } else if (await _canRetry(responseBody)) {
+      return await getSessions();
     } else {
       throw Exception("Couldn't get sessions");
     }
   }
 
-  Future<Session> addSession(Vehicle vehicle, MunicipalZone zone,
-      Fare fare) async {
+  Future<Session> addSession(
+      Vehicle vehicle, MunicipalZone zone, Fare fare) async {
     final authToken = await sessionManager.getAuthToken();
     final accountToken = authToken.accountToken;
 
     final body = json.encode({
       'account_token': accountToken,
       'cost_time_pair': {
-        'cost': fare
-            .getSelectedSimpleFare()
-            .cost,
-        'charged_duration_ms': fare
-            .getSelectedSimpleFare()
-            .chargedDuration,
+        'cost': fare.getSelectedSimpleFare().cost,
+        'charged_duration_ms': fare.getSelectedSimpleFare().chargedDuration,
       },
       'plate': {
         'id': vehicle.number,
@@ -110,6 +166,8 @@ class _Network {
 
     if (response.statusCode == 200) {
       return Session.fromJson(json.decode(responseBody));
+    } else if (await _canRetry(responseBody)) {
+      return await addSession(vehicle, zone, fare);
     } else {
       throw Exception("Couldn't create session");
     }
@@ -130,6 +188,8 @@ class _Network {
     if (response.statusCode == 200) {
       Iterable responseJson = json.decode(responseBody);
       return responseJson.map((object) => Vehicle.fromJson(object)).toList();
+    } else if (await _canRetry(responseBody)) {
+      return await getVehicles();
     } else {
       throw Exception("Couldn't get vehicles");
     }
@@ -148,6 +208,8 @@ class _Network {
     if (response.statusCode == 200) {
       Iterable responseJson = json.decode(responseBody)['result'];
       return responseJson.map((object) => Municipal.fromJson(object)).toList();
+    } else if (await _canRetry(responseBody)) {
+      return await getMunicipals();
     } else {
       throw Exception("Couldn't get municipals");
     }
@@ -169,6 +231,8 @@ class _Network {
       return responseJson
           .map((object) => MunicipalZone.fromJson(object))
           .toList();
+    } else if (await _canRetry(responseBody)) {
+      return await getMunicipalZones(municipalToken);
     } else {
       throw Exception("Couldn't get zones");
     }
@@ -197,6 +261,8 @@ class _Network {
 
     if (response.statusCode == 200) {
       return Fare.fromJson(json.decode(responseBody));
+    } else if (await _canRetry(responseBody)) {
+      return await getFares(vehicle, zone);
     } else {
       throw Exception("Couldn't get fares");
     }

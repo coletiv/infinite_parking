@@ -17,15 +17,7 @@ class SplashPageState extends State<SplashPage> {
   }
 
   void _login() async {
-    final email = await sessionManager.getEmail();
-    final password = await sessionManager.getPassword();
-
-    if (email == null || password == null) {
-      _redirectUser(false);
-      return;
-    }
-
-    final isLoggedIn = await authClient.login(email, password);
+    final isLoggedIn = await authClient.refreshToken();
 
     _redirectUser(isLoggedIn);
   }
