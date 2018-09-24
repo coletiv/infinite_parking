@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:coletiv_infinite_parking/data/model/session.dart';
+import 'package:coletiv_infinite_parking/data/session_manager.dart';
 import 'package:coletiv_infinite_parking/network/client/session_client.dart';
 import 'package:coletiv_infinite_parking/page/add_session.dart';
-import 'package:flutter/material.dart';
+import 'package:coletiv_infinite_parking/page/auth.dart';
 
 class SessionsPage extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class SessionsPageState extends State<SessionsPage> {
     _getSessions();
   }
 
+  BuildContext _context;
   bool _isLoading = false;
   final List<Session> _sessions = List<Session>();
 
@@ -29,6 +32,27 @@ class SessionsPageState extends State<SessionsPage> {
     });
 
     _updateLoadingState(false);
+  }
+
+  void _logout() async {
+    final isLoggedOut = await sessionManager.deleteSession();
+
+    if (isLoggedOut) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AuthPage(),
+        ),
+      );
+    } else {
+      Scaffold.of(_context).showSnackBar(
+      SnackBar(
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.red,
+        content: Text("Logout failed."),
+      ),
+    );
+    }
   }
 
   void _addSession() {
@@ -57,40 +81,49 @@ class SessionsPageState extends State<SessionsPage> {
           IconButton(
             icon: Icon(Icons.refresh),
             onPressed: _getSessions,
+          ),
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: _logout,
           )
         ],
       ),
-      body: Stack(
-        alignment: AlignmentDirectional.center,
-        children: <Widget>[
-          Opacity(
-            opacity: _isLoading ? 1.0 : 0.0,
-            child: CircularProgressIndicator(),
-          ),
-          Opacity(
-            opacity: !_isLoading && _sessions.isEmpty ? 1.0 : 0.0,
-            child: Text(
-              "You have no active sessions.",
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Opacity(
-            opacity: !_isLoading && _sessions.isNotEmpty ? 1.0 : 0.0,
-            child: ListView.builder(
-              itemCount: _sessions.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(
-                    _sessions[index].getPlate(),
-                  ),
-                  subtitle: Text(
-                    _sessions[index].getFormattedFinalDate(),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+      body: Builder(
+        builder: (context) {
+          _context = context;
+          return Stack(
+            alignment: AlignmentDirectional.center,
+            children: <Widget>[
+              Opacity(
+                opacity: _isLoading ? 1.0 : 0.0,
+                child: CircularProgressIndicator(),
+              ),
+              Opacity(
+                opacity: !_isLoading && _sessions.isEmpty ? 1.0 : 0.0,
+                child: Text(
+                  "You have no active sessions.",
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Opacity(
+                opacity: !_isLoading && _sessions.isNotEmpty ? 1.0 : 0.0,
+                child: ListView.builder(
+                  itemCount: _sessions.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
+                        _sessions[index].getPlate(),
+                      ),
+                      subtitle: Text(
+                        _sessions[index].getFormattedFinalDate(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
