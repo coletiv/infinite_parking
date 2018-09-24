@@ -1,5 +1,5 @@
-import 'package:coletiv_infinite_parking/page/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:coletiv_infinite_parking/page/splash.dart';
 
 void main() => runApp(new MyApp());
 
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new AuthPage(),
+      home: new SplashPage(),
     );
   }
 }

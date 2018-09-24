@@ -1,4 +1,3 @@
-import 'package:coletiv_infinite_parking/data/session_manager.dart';
 import 'package:coletiv_infinite_parking/network/client/auth_client.dart';
 import 'package:coletiv_infinite_parking/page/sessions.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +8,6 @@ class AuthPage extends StatefulWidget {
 }
 
 class AuthPageState extends State<AuthPage> {
-  @override
-  void initState() {
-    super.initState();
-    sessionManager.deleteAuthToken();
-  }
-
   BuildContext _context;
 
   final _emailController = TextEditingController();
@@ -29,8 +22,6 @@ class AuthPageState extends State<AuthPage> {
     final password = _passwordController.text;
 
     final isLoggedIn = await authClient.login(email, password);
-
-    // TODO save email and password to handle session expiration
 
     if (isLoggedIn) {
       Navigator.pushReplacement(
