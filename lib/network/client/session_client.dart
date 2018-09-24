@@ -19,8 +19,8 @@ class _SessionClient {
     }
   }
 
-  Future<Session> addSession(Vehicle vehicle, MunicipalZone zone,
-      Fare fare) async {
+  Future<Session> addSession(
+      Vehicle vehicle, MunicipalZone zone, Fare fare) async {
     try {
       return await network.addSession(vehicle, zone, fare);
     } catch (e) {

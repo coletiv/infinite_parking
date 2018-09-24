@@ -46,12 +46,12 @@ class SessionsPageState extends State<SessionsPage> {
       );
     } else {
       Scaffold.of(_context).showSnackBar(
-      SnackBar(
-        duration: Duration(seconds: 2),
-        backgroundColor: Colors.red,
-        content: Text("Logout failed."),
-      ),
-    );
+        SnackBar(
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.red,
+          content: Text("Logout failed."),
+        ),
+      );
     }
   }
 

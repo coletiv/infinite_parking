@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:coletiv_infinite_parking/network/client/auth_client.dart';
 import 'package:coletiv_infinite_parking/page/sessions.dart';
-import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {
   @override

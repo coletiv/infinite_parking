@@ -26,9 +26,9 @@ class Session {
   Map<String, dynamic> toJson() => {
         'plate': plate,
         'dtstart': dtStart,
-    'position_token': positionToken,
+        'position_token': positionToken,
         'coordinates': coordinates,
-    'cost_time_pair': costTimePair,
+        'cost_time_pair': costTimePair,
       };
 
   String getPlate() => plate['id'];
@@ -56,7 +56,6 @@ class Session {
   String getFormattedFinalDate() {
     final finalDate = getFinalDate();
     final timeLeft = getTimeLeft();
-    return 'Ends: ${finalDate.hour}:${finalDate.minute} Time Left: ${timeLeft
-        .inMinutes} minutes';
+    return 'Ends: ${finalDate.hour}:${finalDate.minute} Time Left: ${timeLeft.inMinutes} minutes';
   }
 }

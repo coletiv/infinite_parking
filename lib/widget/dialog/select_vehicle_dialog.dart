@@ -1,8 +1,6 @@
-import 'dart:async';
-
+import 'package:flutter/material.dart';
 import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
 import 'package:coletiv_infinite_parking/network/client/vehicle_client.dart';
-import 'package:flutter/material.dart';
 
 class SelectVehicleDialog extends StatefulWidget {
   final Vehicle selectedVehicle;
