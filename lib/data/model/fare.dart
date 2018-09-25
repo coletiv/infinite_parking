@@ -36,4 +36,6 @@ class Fare {
   }
 
   FareCost getSelectedSimpleFare() => simpleValues[simpleFareIndex];
+
+  Duration getMinimumDuration() => simpleValues.first.getChargedDuration();
 }

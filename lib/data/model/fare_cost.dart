@@ -27,7 +27,5 @@ class FareCost {
         'charged_duration': chargedDuration,
       };
 
-  Duration getDuration() => Duration(milliseconds: realDuration);
-
   Duration getChargedDuration() => Duration(milliseconds: chargedDuration);
 }
