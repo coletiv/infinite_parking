@@ -1,8 +1,6 @@
-import 'dart:async';
-
+import 'package:flutter/material.dart';
 import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
 import 'package:coletiv_infinite_parking/network/client/vehicle_client.dart';
-import 'package:flutter/material.dart';
 
 class SelectVehicleDialog extends StatefulWidget {
   final Vehicle selectedVehicle;
@@ -21,6 +19,8 @@ class SelectVehicleDialogState extends State<SelectVehicleDialog> {
     _getVehicles();
     _selectedVehicle = widget.selectedVehicle;
   }
+
+  // TODO: create modal to add vehicle
 
   bool _isLoading = false;
   Vehicle _selectedVehicle;
@@ -49,19 +49,11 @@ class SelectVehicleDialogState extends State<SelectVehicleDialog> {
     Navigator.pop(context, vehicle);
   }
 
-  Future _addVehicle() async {
-    // TODO create modal to add vehicle
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Select your vehicle"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: _addVehicle,
       ),
       body: Stack(
         alignment: AlignmentDirectional.center,

@@ -1,7 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
 import 'package:coletiv_infinite_parking/network/client/municipal_client.dart';
-import 'package:flutter/material.dart';
 
 class SelectZoneDialog extends StatefulWidget {
   final Municipal selectedMunicipal;

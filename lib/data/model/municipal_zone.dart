@@ -40,6 +40,6 @@ class MunicipalZone {
         'has_children': hasChildren,
         'isVisible': isVisible,
         'name': name,
-    'color': color,
+        'color': color,
       };
 }

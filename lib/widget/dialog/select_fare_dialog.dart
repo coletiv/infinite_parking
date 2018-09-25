@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:coletiv_infinite_parking/data/model/fare.dart';
 import 'package:coletiv_infinite_parking/data/model/fare_cost.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
 import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
 import 'package:coletiv_infinite_parking/network/client/municipal_client.dart';
-import 'package:flutter/material.dart';
 
 class SelectFareDialog extends StatefulWidget {
   final Vehicle selectedVehicle;
@@ -76,9 +76,9 @@ class SelectFareDialogState extends State<SelectFareDialog> {
           ),
           Opacity(
             opacity:
-            !_isLoading && (_fare == null || _fare.simpleValues.isEmpty)
-                ? 1.0
-                : 0.0,
+                !_isLoading && (_fare == null || _fare.simpleValues.isEmpty)
+                    ? 1.0
+                    : 0.0,
             child: Text(
               "Some error happened trying to load fares. Please try again later.",
               textAlign: TextAlign.center,
@@ -86,9 +86,9 @@ class SelectFareDialogState extends State<SelectFareDialog> {
           ),
           Opacity(
             opacity:
-            !_isLoading && _fare != null && _fare.simpleValues.isNotEmpty
-                ? 1.0
-                : 0.0,
+                !_isLoading && _fare != null && _fare.simpleValues.isNotEmpty
+                    ? 1.0
+                    : 0.0,
             child: ListView.builder(
               shrinkWrap: false,
               itemCount: _fare == null ? 0 : _fare.simpleValues.length,
@@ -106,7 +106,7 @@ class SelectFareDialogState extends State<SelectFareDialog> {
                   subtitle: Text(duration),
                   selected: isSelected,
                   trailing:
-                  isSelected ? Icon(Icons.check) : Icon(Icons.arrow_right),
+                      isSelected ? Icon(Icons.check) : Icon(Icons.arrow_right),
                   onTap: () {
                     _onFareSelected(index);
                   },

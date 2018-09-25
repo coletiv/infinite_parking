@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:coletiv_infinite_parking/data/model/fare.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
@@ -9,7 +10,6 @@ import 'package:coletiv_infinite_parking/widget/dialog/select_fare_dialog.dart';
 import 'package:coletiv_infinite_parking/widget/dialog/select_municipal_dialog.dart';
 import 'package:coletiv_infinite_parking/widget/dialog/select_vehicle_dialog.dart';
 import 'package:coletiv_infinite_parking/widget/dialog/select_zone_dialog.dart';
-import 'package:flutter/material.dart';
 
 class AddSessionPage extends StatefulWidget {
   @override
@@ -220,12 +220,7 @@ class AddSessionPageState extends State<AddSessionPage> {
                 title: Text("Fare"),
                 trailing: Icon(Icons.arrow_right),
                 subtitle: Text(_fare != null && _fare.simpleFareIndex != null
-                    ? "${_fare
-                    .getSelectedSimpleFare()
-                    .cost}€ - Duration: ${_fare
-                    .getSelectedSimpleFare()
-                    .getChargedDuration()
-                    .inMinutes}"
+                    ? "${_fare.getSelectedSimpleFare().cost}€ - Duration: ${_fare.getSelectedSimpleFare().getChargedDuration().inMinutes}"
                     : "Select fare"),
                 onTap: _selectFare,
               ),

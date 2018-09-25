@@ -26,8 +26,8 @@ class Vehicle {
   Map<String, dynamic> toJson() => {
         'token': token,
         'number': number,
-    'type': country,
+        'type': country,
         'comment': comment,
-    'is_favorite': isFavorite,
+        'is_favorite': isFavorite,
       };
 }

@@ -26,11 +26,10 @@ class Fare {
   }
 
   Map<String, dynamic> toJson() => {
-    'promise_token': promiseToken,
-    'values': values.map((fareCost) => fareCost.toJson()),
-    'simple_view': simpleValues.map((fareCost) => fareCost.toJson()),
-  };
-
+        'promise_token': promiseToken,
+        'values': values.map((fareCost) => fareCost.toJson()),
+        'simple_view': simpleValues.map((fareCost) => fareCost.toJson()),
+      };
 
   void updateSelectedSimpleFare(int simpleFareIndex) {
     this.simpleFareIndex = simpleFareIndex;
