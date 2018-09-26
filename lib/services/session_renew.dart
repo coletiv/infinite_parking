@@ -10,13 +10,17 @@ void scheduleSessionRenew(Session session) async {
     return;
   }
 
-  Duration delay = session.getDuration() + Duration(seconds: 10);
-
   bool isScheduled = await AndroidAlarmManager.oneShot(
-      delay, _sessionScheduleId, _onRenewSession);
-  
+    session.getDuration(),
+    _sessionScheduleId,
+    _onRenewSession,
+    exact: true,
+    wakeup: true,
+  );
+
   if (isScheduled) {
-    print("Session to be renewed in ${delay.inMinutes} minutes");
+    print(
+        "Session to be renewed in ${session.getDuration().inMinutes} minutes");
   } else {
     print("There was a problem scheduling the session renew");
   }
@@ -24,7 +28,9 @@ void scheduleSessionRenew(Session session) async {
 
 void _onRenewSession() async {
   Session session = await sessionClient.refreshSession();
-  
+
+  scheduleSessionRenew(session);
+
   if (session != null) {
     print("Session renewed successfully until ${session.getFinalDate()}");
   } else {
