@@ -5,7 +5,7 @@ class Fare {
   final List<FareCost> values;
   final List<FareCost> simpleValues;
 
-  int simpleFareIndex;
+  DateTime selectedTime;
 
   Fare({
     this.promiseToken,
@@ -31,11 +31,81 @@ class Fare {
         'simple_view': simpleValues.map((fareCost) => fareCost.toJson()),
       };
 
-  void updateSelectedSimpleFare(int simpleFareIndex) {
-    this.simpleFareIndex = simpleFareIndex;
+  Duration getMinimumDuration() => simpleValues.first.getChargedDuration();
+
+  List<FareCost> getSelectedFares() {
+    if (selectedTime == null) {
+      return null;
+    }
+
+    DateTime currentDate = DateTime.now();
+    Duration sessionDuration = selectedTime.difference(currentDate);
+
+    Duration durationLeftToCalculate = sessionDuration;
+
+    List<FareCost> selectedFares = List<FareCost>();
+
+    while (durationLeftToCalculate.inMicroseconds > 0) {
+      FareCost fare = simpleValues.firstWhere((FareCost fareCost) {
+        fareCost.getChargedDuration() >= durationLeftToCalculate;
+      }, orElse: () {
+        simpleValues.last;
+      });
+
+      selectedFares.add(fare);
+      durationLeftToCalculate =
+          durationLeftToCalculate - fare.getChargedDuration();
+    }
+
+    return selectedFares;
   }
 
-  FareCost getSelectedSimpleFare() => simpleValues[simpleFareIndex];
+  double getSessionCost() {
+    if (selectedTime == null) {
+      return null;
+    }
 
-  Duration getMinimumDuration() => simpleValues.first.getChargedDuration();
+    double cost = 0;
+
+    getSelectedFares().forEach((FareCost fareCost) {
+      cost += fareCost.chargedCost;
+    });
+
+    return cost;
+  }
+
+  String getFormattedSessionCost() {
+    if (selectedTime == null) {
+      return null;
+    }
+
+    return "${getSessionCost()}€";
+  }
+
+  DateTime getSessionExpirationDate() {
+    if (selectedTime == null) {
+      return null;
+    }
+
+    Duration sessionDuration = Duration();
+    
+    getSelectedFares().forEach((FareCost fareCost) {
+      sessionDuration += fareCost.getChargedDuration();
+    });
+
+    DateTime currentDate = DateTime.now();
+    currentDate.add(sessionDuration);
+
+    return currentDate;
+  }
+
+  String getFormattedSessionExpirationTime() {
+    if (selectedTime == null) {
+      return null;
+    }
+    
+    int expirationHour = getSessionExpirationDate().hour;
+    int expirationMinute = getSessionExpirationDate().minute;
+    return "Expires: $expirationHour:$expirationMinute";
+  }
 }
