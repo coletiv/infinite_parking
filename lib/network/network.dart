@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:coletiv_infinite_parking/data/model/auth_token.dart';
 import 'package:coletiv_infinite_parking/data/model/fare.dart';
+import 'package:coletiv_infinite_parking/data/model/fare_cost.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
 import 'package:coletiv_infinite_parking/data/model/session.dart';
@@ -134,23 +135,23 @@ class _Network {
     }
   }
 
-  Future<Session> addSession(
-      Vehicle vehicle, MunicipalZone zone, Fare fare) async {
+  Future<Session> addSession(Vehicle vehicle, MunicipalZone zone,
+      String fareToken, FareCost fareCost) async {
     final authToken = await sessionManager.getAuthToken();
     final accountToken = authToken.accountToken;
 
     final body = json.encode({
       'account_token': accountToken,
       'cost_time_pair': {
-        'cost': fare.getSelectedSimpleFare().cost,
-        'charged_duration_ms': fare.getSelectedSimpleFare().chargedDuration,
+        'cost': fareCost.cost,
+        'charged_duration_ms': fareCost.chargedDuration,
       },
       'plate': {
         'id': vehicle.number,
         'type': vehicle.country,
       },
       'position_token': zone.token,
-      'promise_token': fare.promiseToken,
+      'promise_token': fareToken,
       'type': 'MANAGED'
     });
 
@@ -167,7 +168,7 @@ class _Network {
     if (response.statusCode == 200) {
       return Session.fromJson(json.decode(responseBody));
     } else if (await _canRetry(responseBody)) {
-      return await addSession(vehicle, zone, fare);
+      return await addSession(vehicle, zone, fareToken, fareCost);
     } else {
       throw Exception("Couldn't create session");
     }
