@@ -46,15 +46,13 @@ class Fare {
     List<FareCost> selectedFares = List<FareCost>();
 
     while (durationLeftToCalculate.inMicroseconds > 0) {
-      FareCost fare = simpleValues.firstWhere((FareCost fareCost) {
-        fareCost.getChargedDuration() >= durationLeftToCalculate;
-      }, orElse: () {
-        simpleValues.last;
-      });
+      FareCost fare = simpleValues.firstWhere(
+          (fareCost) =>
+              fareCost.getChargedDuration() >= durationLeftToCalculate,
+          orElse: () => simpleValues.last);
 
       selectedFares.add(fare);
-      durationLeftToCalculate =
-          durationLeftToCalculate - fare.getChargedDuration();
+      durationLeftToCalculate -= fare.getChargedDuration();
     }
 
     return selectedFares;
@@ -65,11 +63,9 @@ class Fare {
       return null;
     }
 
-    double cost = 0;
+    double cost = 0.0;
 
-    getSelectedFares().forEach((FareCost fareCost) {
-      cost += fareCost.chargedCost;
-    });
+    getSelectedFares().forEach((fareCost) => cost += fareCost.cost);
 
     return cost;
   }
@@ -88,22 +84,18 @@ class Fare {
     }
 
     Duration sessionDuration = Duration();
-    
-    getSelectedFares().forEach((FareCost fareCost) {
-      sessionDuration += fareCost.getChargedDuration();
-    });
 
-    DateTime currentDate = DateTime.now();
-    currentDate.add(sessionDuration);
+    getSelectedFares().forEach(
+        (fareCost) => sessionDuration += fareCost.getChargedDuration());
 
-    return currentDate;
+    return DateTime.now().add(sessionDuration);
   }
 
   String getFormattedSessionExpirationTime() {
     if (selectedTime == null) {
       return null;
     }
-    
+
     int expirationHour = getSessionExpirationDate().hour;
     int expirationMinute = getSessionExpirationDate().minute;
     return "Expires: $expirationHour:$expirationMinute";
