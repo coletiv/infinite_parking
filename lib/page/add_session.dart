@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:coletiv_infinite_parking/data/model/session.dart';
 import 'package:flutter/material.dart';
 import 'package:coletiv_infinite_parking/data/model/fare.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
 import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
+import 'package:coletiv_infinite_parking/data/session_manager.dart';
 import 'package:coletiv_infinite_parking/network/client/municipal_client.dart';
 import 'package:coletiv_infinite_parking/network/client/session_client.dart';
 import 'package:coletiv_infinite_parking/widget/dialog/select_municipal_dialog.dart';
@@ -23,7 +25,6 @@ class AddSessionPageState extends State<AddSessionPage> {
   Municipal _selectedMunicipal;
   MunicipalZone _selectedZone;
   Fare _fare;
-  DateTime _selectedTime;
 
   bool _isLoadingFares = false;
 
@@ -43,12 +44,22 @@ class AddSessionPageState extends State<AddSessionPage> {
     });
   }
 
-  String _getSessionCost() {
-    return "1";
-  }
-
   void _addSession() async {
-    await sessionClient.addSession(_selectedVehicle, _selectedZone, _fare);
+    bool isParkingSessionSaved = await sessionManager.saveParkingSession(_fare);
+
+    if (!isParkingSessionSaved) {
+      _showError("Some problem happened while creating your parking session");
+      return;
+    }
+
+    Session parkingSession = await sessionClient.addSession(_selectedVehicle, _selectedZone);
+
+    if (parkingSession == null) {
+      _showError("Some problem happened while creating your parking session");
+    } else {
+      await sessionManager.updateSelectedFares();
+      Navigator.pop(context);
+    }
   }
 
   void _validateInput() {
@@ -58,7 +69,7 @@ class AddSessionPageState extends State<AddSessionPage> {
       _showError("Please select a Municipal first!");
     } else if (_selectedZone == null) {
       _showError("Please select a Zone first!");
-    } else if (_fare == null || _selectedTime == null) {
+    } else if (_fare == null || _fare.selectedTime == null) {
       _showError("Please select a Time first!");
     } else {
       _addSession();
@@ -95,7 +106,6 @@ class AddSessionPageState extends State<AddSessionPage> {
     setState(() {
       if (_selectedVehicle != null && _selectedVehicle.token != vehicle.token) {
         _fare = null;
-        _selectedTime = null;
       }
       _selectedVehicle = vehicle;
     });
@@ -124,7 +134,6 @@ class AddSessionPageState extends State<AddSessionPage> {
           _selectedMunicipal.token != municipal.token) {
         _selectedZone = null;
         _fare = null;
-        _selectedTime = null;
       }
       _selectedMunicipal = municipal;
     });
@@ -161,7 +170,6 @@ class AddSessionPageState extends State<AddSessionPage> {
     setState(() {
       if (_selectedZone != null && _selectedZone.token != zone.token) {
         _fare = null;
-        _selectedTime = null;
       }
       _selectedZone = zone;
     });
@@ -204,7 +212,7 @@ class AddSessionPageState extends State<AddSessionPage> {
     }
 
     setState(() {
-      _selectedTime = selectedTime;
+      _fare.selectedTime = selectedTime;
     });
   }
 
@@ -292,19 +300,11 @@ class AddSessionPageState extends State<AddSessionPage> {
                       ],
                     );
                   } else {
-                    String cost = _getSessionCost();
-                    String expirationHour = _selectedTime.hour.toString();
-                    String expirationMinutes = _selectedTime.minute.toString();
-                    String foramttedExpirationMinutes =
-                        expirationMinutes.length == 1
-                            ? expirationMinutes + "0"
-                            : expirationMinutes;
-
                     return ListTile(
                       title: Text("Time"),
                       trailing: Icon(Icons.arrow_right),
-                      subtitle: Text(_fare != null && _selectedTime != null
-                          ? "$cost€ - Expires: $expirationHour:$foramttedExpirationMinutes"
+                      subtitle: Text(_fare != null && _fare.selectedTime != null
+                          ? "${_fare.getFormattedSessionCost()} - ${_fare.getFormattedSessionExpirationTime()}"
                           : "Select time"),
                       onTap: _selectTime,
                     );
