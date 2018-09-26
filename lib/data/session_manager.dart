@@ -151,7 +151,10 @@ class _SessionManager {
     if (selectedFaresJson == null) {
       return null;
     } else {
-      return json.decode(selectedFaresJson);
+      return json
+          .decode(selectedFaresJson)
+          .map<FareCost>((object) => FareCost.fromJson(object))
+          .toList();
     }
   }
 }
