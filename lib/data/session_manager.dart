@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:coletiv_infinite_parking/data/model/auth_token.dart';
+import 'package:coletiv_infinite_parking/data/model/fare.dart';
+import 'package:coletiv_infinite_parking/data/model/fare_cost.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final sessionManager = _SessionManager._internal();
@@ -12,6 +14,8 @@ class _SessionManager {
   final String _authTokenKey = 'AuthToken';
   final String _emailKey = "Email";
   final String _passwordKey = "Password";
+  final String _fareTokenKey = "FareToken";
+  final String _selectedFaresKeys = "SelectedFares";
 
   Future<bool> _saveAuthToken(AuthToken authToken) async {
     final prefs = await SharedPreferences.getInstance();
@@ -65,5 +69,54 @@ class _SessionManager {
   Future<bool> isLoggedIn() async {
     final authToken = await getAuthToken();
     return authToken != null ? true : false;
+  }
+
+  Future<bool> _saveFareToken(Fare fare) async {
+    final prefs = await SharedPreferences.getInstance();
+    return await prefs.setString(_fareTokenKey, fare.promiseToken);
+  }
+
+  Future<bool> _saveSelectedFares(List<FareCost> selectedFares) async {
+    final prefs = await SharedPreferences.getInstance();
+    final String selectedFaresJson = json.encode(selectedFares);
+    return await prefs.setString(_selectedFaresKeys, selectedFaresJson);
+  }
+
+  Future<bool> saveParkingSession(Fare fare) async {
+    return await _saveFareToken(fare) &&
+        await _saveSelectedFares(fare.getSelectedFares());
+  }
+
+  Future<bool> updateSelectedFares() async {
+    List<FareCost> selectedFares = await getSelectedFares();
+
+    if (selectedFares == null) {
+      return false;
+    }
+
+    if (selectedFares.length > 0) {
+      selectedFares.removeAt(0);
+    } else {
+      final prefs = await SharedPreferences.getInstance();
+      return await prefs.setString(_selectedFaresKeys, null);
+    }
+
+    return await _saveSelectedFares(selectedFares);
+  }
+
+  Future<String> getFareToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return await prefs.get(_fareTokenKey);
+  }
+
+  Future<List<FareCost>> getSelectedFares() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String selectedFaresJson = await prefs.get(_selectedFaresKeys);
+
+    if (selectedFaresJson == null) {
+      return null;
+    } else {
+      return json.decode(selectedFaresJson);
+    }
   }
 }
