@@ -45,19 +45,20 @@ class AddSessionPageState extends State<AddSessionPage> {
   }
 
   void _addSession() async {
-    bool isParkingSessionSaved = await sessionManager.saveParkingSession(_fare);
+    bool isParkingSessionSaved = await sessionManager.saveParkingSession(
+        _selectedVehicle, _selectedZone, _fare);
 
     if (!isParkingSessionSaved) {
       _showError("Some problem happened while creating your parking session");
       return;
     }
 
-    Session parkingSession = await sessionClient.addSession(_selectedVehicle, _selectedZone);
+    Session parkingSession =
+        await sessionClient.addSession(_selectedVehicle, _selectedZone);
 
     if (parkingSession == null) {
       _showError("Some problem happened while creating your parking session");
     } else {
-      await sessionManager.updateSelectedFares();
       Navigator.pop(context);
     }
   }

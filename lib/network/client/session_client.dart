@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:coletiv_infinite_parking/data/model/fare_cost.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
 import 'package:coletiv_infinite_parking/data/model/session.dart';
 import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
-import 'package:coletiv_infinite_parking/data/session_manager.dart';
 import 'package:coletiv_infinite_parking/network/network.dart';
 
 final sessionClient = _SessionClient._internal();
@@ -21,15 +19,16 @@ class _SessionClient {
   }
 
   Future<Session> addSession(Vehicle vehicle, MunicipalZone zone) async {
-    final String fareToken = await sessionManager.getFareToken();
-    final List<FareCost> selectedFares = await sessionManager.getSelectedFares();
-
-    if (fareToken == null || selectedFares == null) {
+    try {
+      return await network.addSession(vehicle, zone);
+    } catch (e) {
       return null;
     }
+  }
 
+  Future<Session> refreshSession() async {
     try {
-      return await network.addSession(vehicle, zone, fareToken, selectedFares.first);
+      return await network.refreshSession();
     } catch (e) {
       return null;
     }

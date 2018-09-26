@@ -135,10 +135,18 @@ class _Network {
     }
   }
 
-  Future<Session> addSession(Vehicle vehicle, MunicipalZone zone,
-      String fareToken, FareCost fareCost) async {
-    final authToken = await sessionManager.getAuthToken();
-    final accountToken = authToken.accountToken;
+  Future<Session> addSession(Vehicle vehicle, MunicipalZone zone) async {
+    final AuthToken authToken = await sessionManager.getAuthToken();
+    final String accountToken = authToken.accountToken;
+
+    final String fareToken = await sessionManager.getSelectedFareToken();
+    final List<FareCost> selectedFares = await sessionManager.getSelectedFares();
+
+    if (fareToken == null || selectedFares == null || selectedFares.isEmpty) {
+      return null;
+    }
+
+    final FareCost fareCost = selectedFares.first;
 
     final body = json.encode({
       'account_token': accountToken,
@@ -166,9 +174,65 @@ class _Network {
     final responseBody = utf8.decode(response.bodyBytes);
 
     if (response.statusCode == 200) {
+      await sessionManager.updateSelectedFares();
       return Session.fromJson(json.decode(responseBody));
     } else if (await _canRetry(responseBody)) {
-      return await addSession(vehicle, zone, fareToken, fareCost);
+      return await addSession(vehicle, zone);
+    } else {
+      throw Exception("Couldn't create session");
+    }
+  }
+
+  Future<Session> refreshSession() async {
+    final AuthToken authToken = await sessionManager.getAuthToken();
+    final String accountToken = authToken.accountToken;
+
+    final Vehicle vehicle = await sessionManager.getSelectedVehicle();
+    final String zoneToken = await sessionManager.getSelectedZoneToken();
+    final String fareToken = await sessionManager.getSelectedFareToken();
+    final List<FareCost> selectedFares =
+        await sessionManager.getSelectedFares();
+
+    if (vehicle == null ||
+        zoneToken == null ||
+        fareToken == null ||
+        selectedFares == null ||
+        selectedFares.isEmpty) {
+      return null;
+    }
+
+    final FareCost fareCost = selectedFares.first;
+
+    final body = json.encode({
+      'account_token': accountToken,
+      'cost_time_pair': {
+        'cost': fareCost.cost,
+        'charged_duration_ms': fareCost.chargedDuration,
+      },
+      'plate': {
+        'id': vehicle.number,
+        'type': vehicle.country,
+      },
+      'position_token': zoneToken,
+      'promise_token': fareToken,
+      'type': 'MANAGED'
+    });
+
+    final addSessionUrl = '$_baseUrl/parking/sessions/';
+
+    final response = await http.post(
+      addSessionUrl,
+      headers: await _getHeaders(),
+      body: body,
+    );
+
+    final responseBody = utf8.decode(response.bodyBytes);
+
+    if (response.statusCode == 200) {
+      await sessionManager.updateSelectedFares();
+      return Session.fromJson(json.decode(responseBody));
+    } else if (await _canRetry(responseBody)) {
+      return await refreshSession();
     } else {
       throw Exception("Couldn't create session");
     }
