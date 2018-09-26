@@ -122,6 +122,11 @@ class _SessionManager {
     return await _saveSelectedFares(selectedFares);
   }
 
+  Future<bool> needToRenewSession() async {
+    List<FareCost> selectedFares = await getSelectedFares();
+    return selectedFares != null && selectedFares.isNotEmpty;
+  }
+
   Future<Vehicle> getSelectedVehicle() async {
     final String vehicleJson =
         await _getPrefs().then((prefs) => prefs.get(_selectedVehicleKey));

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:coletiv_infinite_parking/data/model/session.dart';
 import 'package:flutter/material.dart';
+import 'package:coletiv_infinite_parking/data/model/session.dart';
 import 'package:coletiv_infinite_parking/data/model/fare.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
@@ -9,6 +9,7 @@ import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
 import 'package:coletiv_infinite_parking/data/session_manager.dart';
 import 'package:coletiv_infinite_parking/network/client/municipal_client.dart';
 import 'package:coletiv_infinite_parking/network/client/session_client.dart';
+import 'package:coletiv_infinite_parking/services/session_renew.dart';
 import 'package:coletiv_infinite_parking/widget/dialog/select_municipal_dialog.dart';
 import 'package:coletiv_infinite_parking/widget/dialog/select_vehicle_dialog.dart';
 import 'package:coletiv_infinite_parking/widget/dialog/select_zone_dialog.dart';
@@ -59,6 +60,7 @@ class AddSessionPageState extends State<AddSessionPage> {
     if (parkingSession == null) {
       _showError("Some problem happened while creating your parking session");
     } else {
+      scheduleSessionRenew(parkingSession);
       Navigator.pop(context);
     }
   }
