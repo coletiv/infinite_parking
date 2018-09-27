@@ -115,12 +115,14 @@ class SessionsPageState extends State<SessionsPage> {
                 child: ListView.builder(
                   itemCount: _sessions.length,
                   itemBuilder: (context, index) {
+                    Session session = _sessions[index];
+
                     return ListTile(
                       title: Text(
-                        _sessions[index].getPlate(),
+                        session.getPlate(),
                       ),
                       subtitle: Text(
-                        _sessions[index].getFormattedFinalDate(),
+                        "Ends at:${session.getFormattedFinalDate()}",
                       ),
                     );
                   },
