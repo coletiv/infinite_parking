@@ -20,6 +20,8 @@ class SplashPageState extends State<SplashPage> {
 
   void _login() async {
     await AndroidAlarmManager.initialize();
+    await pushNotifications.initialize();
+    
     final isLoggedIn = await authClient.refreshToken();
 
     _redirectUser(isLoggedIn);

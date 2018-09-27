@@ -66,6 +66,8 @@ class _PushNotifications {
   }
 
   Future<bool> cancelAll() async {
+    assert(_isInitialized);
+    
     return await _notificationsPlugin
         .cancelAll()
         .then((_) => true)

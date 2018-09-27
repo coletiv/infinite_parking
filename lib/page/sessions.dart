@@ -17,7 +17,6 @@ class SessionsPageState extends State<SessionsPage> {
   void initState() {
     super.initState();
     _getSessions();
-    pushNotifications.initialize();
   }
 
   BuildContext _context;
