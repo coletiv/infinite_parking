@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:coletiv_infinite_parking/data/model/auth_token.dart';
-import 'package:coletiv_infinite_parking/data/model/fare.dart';
-import 'package:coletiv_infinite_parking/data/model/fare_cost.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
 import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,11 +16,12 @@ class _SessionManager {
   final String _passwordKey = "Password";
   final String _selectedVehicleKey = "SelectedVehicle";
   final String _selectedZoneTokenKey = "SelectedZoneToken";
-  final String _selectedFareTokenKey = "SelectedFareToken";
-  final String _selectedFaresKeys = "SelectedFares";
+  final String _selectedTimeKey = "SelectedTimeToken";
 
   Future<SharedPreferences> _getPrefs() async =>
       await SharedPreferences.getInstance();
+
+  // User Session
 
   Future<bool> _saveAuthToken(AuthToken authToken) async {
     final String authTokenJson = json.encode(authToken);
@@ -73,6 +72,8 @@ class _SessionManager {
     return authToken != null ? true : false;
   }
 
+  // Parking Session
+
   Future<bool> _saveSelectedVehicle(Vehicle vehicle) async {
     final String vehicleJson = json.encode(vehicle);
     return await _getPrefs()
@@ -81,50 +82,31 @@ class _SessionManager {
 
   Future<bool> _saveSelectedZoneToken(MunicipalZone zone) async {
     return await _getPrefs()
-        .then((prefs) => prefs.setString(_selectedFareTokenKey, zone.token));
+        .then((prefs) => prefs.setString(_selectedZoneTokenKey, zone.token));
   }
 
-  Future<bool> _saveSelectedFareToken(Fare fare) async {
+  Future<bool> _saveSelectedTime(DateTime time) async {
     return await _getPrefs().then(
-        (prefs) => prefs.setString(_selectedFareTokenKey, fare.promiseToken));
-  }
-
-  Future<bool> _saveSelectedFares(List<FareCost> selectedFares) async {
-    final String selectedFaresJson = json.encode(selectedFares);
-    return await _getPrefs().then(
-        (prefs) => prefs.setString(_selectedFaresKeys, selectedFaresJson));
+        (prefs) => prefs.setString(_selectedTimeKey, time.toIso8601String()));
   }
 
   Future<bool> saveParkingSession(
-      Vehicle vehicle, MunicipalZone zone, Fare fare) async {
+      Vehicle vehicle, MunicipalZone zone, DateTime time) async {
     return Future.wait([
       _saveSelectedVehicle(vehicle),
       _saveSelectedZoneToken(zone),
-      _saveSelectedFareToken(fare),
-      _saveSelectedFares(fare.getSelectedFares()),
+      _saveSelectedTime(time),
     ]).then((_) => true).catchError(() => false);
   }
 
-  Future<bool> updateSelectedFares() async {
-    List<FareCost> selectedFares = await getSelectedFares();
-
-    if (selectedFares == null) {
-      return false;
-    }
-
-    if (selectedFares.length > 0) {
-      selectedFares.removeAt(0);
-    } else {
-      return await _getPrefs()
-          .then((prefs) => prefs.setString(_selectedFaresKeys, null));
-    }
-
-    return await _saveSelectedFares(selectedFares);
-  }
-
-  Future<bool> needToRenewSession() async {
-    List<FareCost> selectedFares = await getSelectedFares();
-    return selectedFares != null && selectedFares.isNotEmpty;
+  Future<bool> deleteParkingSession() async {
+    return await _getPrefs().then((prefs) {
+      Future.wait([
+        prefs.setString(_selectedVehicleKey, null),
+        prefs.setString(_selectedZoneTokenKey, null),
+        prefs.setString(_selectedTimeKey, null)
+      ]).then((_) => true).catchError(() => false);
+    });
   }
 
   Future<Vehicle> getSelectedVehicle() async {
@@ -141,20 +123,9 @@ class _SessionManager {
   Future<String> getSelectedZoneToken() async =>
       await _getPrefs().then((prefs) => prefs.get(_selectedZoneTokenKey));
 
-  Future<String> getSelectedFareToken() async =>
-      await _getPrefs().then((prefs) => prefs.get(_selectedFareTokenKey));
-
-  Future<List<FareCost>> getSelectedFares() async {
-    final String selectedFaresJson =
-        await _getPrefs().then((prefs) => prefs.get(_selectedFaresKeys));
-
-    if (selectedFaresJson == null) {
-      return null;
-    } else {
-      return json
-          .decode(selectedFaresJson)
-          .map<FareCost>((object) => FareCost.fromJson(object))
-          .toList();
-    }
+  Future<DateTime> getSelectedTime() async {
+    String selectedTimeString =
+        await _getPrefs().then((prefs) => prefs.get(_selectedTimeKey));
+    return DateTime.tryParse(selectedTimeString);
   }
 }

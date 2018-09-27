@@ -7,7 +7,7 @@ import 'package:coletiv_infinite_parking/data/model/municipal.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
 import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
 import 'package:coletiv_infinite_parking/data/session_manager.dart';
-import 'package:coletiv_infinite_parking/network/client/municipal_client.dart';
+import 'package:coletiv_infinite_parking/network/client/fare_client.dart';
 import 'package:coletiv_infinite_parking/network/client/session_client.dart';
 import 'package:coletiv_infinite_parking/services/session_renew.dart';
 import 'package:coletiv_infinite_parking/widget/dialog/select_municipal_dialog.dart';
@@ -25,6 +25,8 @@ class AddSessionPageState extends State<AddSessionPage> {
   Vehicle _selectedVehicle;
   Municipal _selectedMunicipal;
   MunicipalZone _selectedZone;
+  DateTime _selectedTime;
+
   Fare _fare;
 
   bool _isLoadingFares = false;
@@ -38,7 +40,7 @@ class AddSessionPageState extends State<AddSessionPage> {
       _isLoadingFares = true;
     });
 
-    _fare = await municipalClient.getFare(_selectedVehicle, _selectedZone);
+    _fare = await fareClient.getFare(_selectedVehicle, _selectedZone);
 
     setState(() {
       _isLoadingFares = false;
@@ -47,15 +49,21 @@ class AddSessionPageState extends State<AddSessionPage> {
 
   void _addSession() async {
     bool isParkingSessionSaved = await sessionManager.saveParkingSession(
-        _selectedVehicle, _selectedZone, _fare);
+      _selectedVehicle,
+      _selectedZone,
+      _selectedTime,
+    );
 
     if (!isParkingSessionSaved) {
       _showError("Some problem happened while creating your parking session");
       return;
     }
 
-    Session parkingSession =
-        await sessionClient.addSession(_selectedVehicle, _selectedZone);
+    Session parkingSession = await sessionClient.addSession(
+      _selectedVehicle,
+      _selectedZone,
+      _fare,
+    );
 
     if (parkingSession == null) {
       _showError("Some problem happened while creating your parking session");
@@ -72,7 +80,7 @@ class AddSessionPageState extends State<AddSessionPage> {
       _showError("Please select a Municipal first!");
     } else if (_selectedZone == null) {
       _showError("Please select a Zone first!");
-    } else if (_fare == null || _fare.selectedTime == null) {
+    } else if (_fare == null || _selectedTime == null) {
       _showError("Please select a Time first!");
     } else {
       _addSession();
@@ -215,7 +223,7 @@ class AddSessionPageState extends State<AddSessionPage> {
     }
 
     setState(() {
-      _fare.selectedTime = selectedTime;
+      _selectedTime = selectedTime;
     });
   }
 
@@ -306,8 +314,8 @@ class AddSessionPageState extends State<AddSessionPage> {
                     return ListTile(
                       title: Text("Time"),
                       trailing: Icon(Icons.arrow_right),
-                      subtitle: Text(_fare != null && _fare.selectedTime != null
-                          ? "${_fare.getFormattedSessionCost()} - ${_fare.getFormattedSessionExpirationTime()}"
+                      subtitle: Text(_fare != null && _selectedTime != null
+                          ? "${_fare.getFormattedSessionCost(_selectedTime)} - ${_fare.getFormattedSessionExpirationTime(_selectedTime)}"
                           : "Select time"),
                       onTap: _selectTime,
                     );

@@ -5,8 +5,6 @@ class Fare {
   final List<FareCost> values;
   final List<FareCost> simpleValues;
 
-  DateTime selectedTime;
-
   Fare({
     this.promiseToken,
     this.values,
@@ -33,13 +31,12 @@ class Fare {
 
   Duration getMinimumDuration() => simpleValues.first.getChargedDuration();
 
-  List<FareCost> getSelectedFares() {
-    if (selectedTime == null) {
-      return null;
+  List<FareCost> getSelectedFares(DateTime selectedTime) {
+    if (DateTime.now().isAfter(selectedTime)) {
+      return List<FareCost>();
     }
 
-    DateTime currentDate = DateTime.now();
-    Duration sessionDuration = selectedTime.difference(currentDate);
+    Duration sessionDuration = selectedTime.difference(DateTime.now());
 
     Duration durationLeftToCalculate = sessionDuration;
 
@@ -58,46 +55,30 @@ class Fare {
     return selectedFares;
   }
 
-  double getSessionCost() {
-    if (selectedTime == null) {
-      return null;
-    }
-
+  double getSessionCost(DateTime selectedTime) {
     double cost = 0.0;
 
-    getSelectedFares().forEach((fareCost) => cost += fareCost.cost);
+    getSelectedFares(selectedTime).forEach((fareCost) => cost += fareCost.cost);
 
     return cost;
   }
 
-  String getFormattedSessionCost() {
-    if (selectedTime == null) {
-      return null;
-    }
-
-    return "${getSessionCost()}€";
+  String getFormattedSessionCost(DateTime selectedTime) {
+    return "${getSessionCost(selectedTime)}€";
   }
 
-  DateTime getSessionExpirationDate() {
-    if (selectedTime == null) {
-      return null;
-    }
-
+  DateTime getSessionExpirationDate(DateTime selectedTime) {
     Duration sessionDuration = Duration();
 
-    getSelectedFares().forEach(
+    getSelectedFares(selectedTime).forEach(
         (fareCost) => sessionDuration += fareCost.getChargedDuration());
 
     return DateTime.now().add(sessionDuration);
   }
 
-  String getFormattedSessionExpirationTime() {
-    if (selectedTime == null) {
-      return null;
-    }
-
-    int expirationHour = getSessionExpirationDate().hour;
-    int expirationMinute = getSessionExpirationDate().minute;
+  String getFormattedSessionExpirationTime(DateTime selectedTime) {
+    int expirationHour = getSessionExpirationDate(selectedTime).hour;
+    int expirationMinute = getSessionExpirationDate(selectedTime).minute;
     return "Expires: $expirationHour:$expirationMinute";
   }
 }

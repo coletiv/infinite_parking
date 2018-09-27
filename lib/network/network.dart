@@ -37,6 +37,8 @@ class _Network {
     return headers;
   }
 
+  // AUTHENTICATION
+
   Future<bool> login(String email, String password) async {
     final loginUrl = '$_baseUrl/auth/accounts';
     final body = json.encode({'username': email, 'password': password});
@@ -112,6 +114,8 @@ class _Network {
     }
   }
 
+  // PARKING SESSION
+
   Future<List<Session>> getSessions() async {
     final authToken = await sessionManager.getAuthToken();
     final accountToken = authToken.accountToken;
@@ -135,14 +139,17 @@ class _Network {
     }
   }
 
-  Future<Session> addSession(Vehicle vehicle, MunicipalZone zone) async {
+  Future<Session> addSession(
+      Vehicle vehicle, MunicipalZone zone, Fare fare) async {
     final AuthToken authToken = await sessionManager.getAuthToken();
     final String accountToken = authToken.accountToken;
 
-    final String fareToken = await sessionManager.getSelectedFareToken();
-    final List<FareCost> selectedFares = await sessionManager.getSelectedFares();
+    final DateTime selectedTime = await sessionManager.getSelectedTime();
+    final List<FareCost> selectedFares = fare.getSelectedFares(selectedTime);
 
-    if (fareToken == null || selectedFares == null || selectedFares.isEmpty) {
+    if (selectedTime == null ||
+        DateTime.now().isAfter(selectedTime) ||
+        selectedFares.isEmpty) {
       return null;
     }
 
@@ -159,7 +166,7 @@ class _Network {
         'type': vehicle.country,
       },
       'position_token': zone.token,
-      'promise_token': fareToken,
+      'promise_token': fare.promiseToken,
       'type': 'MANAGED'
     });
 
@@ -174,29 +181,27 @@ class _Network {
     final responseBody = utf8.decode(response.bodyBytes);
 
     if (response.statusCode == 200) {
-      await sessionManager.updateSelectedFares();
       return Session.fromJson(json.decode(responseBody));
     } else if (await _canRetry(responseBody)) {
-      return await addSession(vehicle, zone);
+      return await addSession(vehicle, zone, fare);
     } else {
       throw Exception("Couldn't create session");
     }
   }
 
-  Future<Session> refreshSession() async {
+  Future<Session> refreshSession(Fare fare) async {
     final AuthToken authToken = await sessionManager.getAuthToken();
     final String accountToken = authToken.accountToken;
 
     final Vehicle vehicle = await sessionManager.getSelectedVehicle();
     final String zoneToken = await sessionManager.getSelectedZoneToken();
-    final String fareToken = await sessionManager.getSelectedFareToken();
-    final List<FareCost> selectedFares =
-        await sessionManager.getSelectedFares();
+    final DateTime selectedTime = await sessionManager.getSelectedTime();
+    final List<FareCost> selectedFares = fare.getSelectedFares(selectedTime);
 
     if (vehicle == null ||
         zoneToken == null ||
-        fareToken == null ||
-        selectedFares == null ||
+        selectedTime == null ||
+        DateTime.now().isAfter(selectedTime) ||
         selectedFares.isEmpty) {
       return null;
     }
@@ -214,7 +219,7 @@ class _Network {
         'type': vehicle.country,
       },
       'position_token': zoneToken,
-      'promise_token': fareToken,
+      'promise_token': fare.promiseToken,
       'type': 'MANAGED'
     });
 
@@ -229,14 +234,15 @@ class _Network {
     final responseBody = utf8.decode(response.bodyBytes);
 
     if (response.statusCode == 200) {
-      await sessionManager.updateSelectedFares();
       return Session.fromJson(json.decode(responseBody));
     } else if (await _canRetry(responseBody)) {
-      return await refreshSession();
+      return await refreshSession(fare);
     } else {
       throw Exception("Couldn't create session");
     }
   }
+
+  // VEHICLE
 
   Future<List<Vehicle>> getVehicles() async {
     final authToken = await sessionManager.getAuthToken();
@@ -259,6 +265,8 @@ class _Network {
       throw Exception("Couldn't get vehicles");
     }
   }
+
+  // MUNICIPALS
 
   Future<List<Municipal>> getMunicipals() async {
     final municipalUrl = '$_baseUrl/centers/services?type=MUNICIPAL_CONTEXT';
@@ -303,7 +311,9 @@ class _Network {
     }
   }
 
-  Future<Fare> getFares(Vehicle vehicle, MunicipalZone zone) async {
+  // FARES
+
+  Future<Fare> getFare(Vehicle vehicle, String zoneToken) async {
     final authToken = await sessionManager.getAuthToken();
     final accountToken = authToken.accountToken;
     final fareUrl = '$_baseUrl/parking/fares/table/';
@@ -311,7 +321,7 @@ class _Network {
     final body = json.encode({
       'account_token': accountToken,
       'type': 'MANAGED',
-      'position_token': zone.token,
+      'position_token': zoneToken,
       'dtStart': {'date': DateTime.now().toIso8601String()},
       'plate': {'id': vehicle.number, 'type': 'PT'}
     });
@@ -327,7 +337,7 @@ class _Network {
     if (response.statusCode == 200) {
       return Fare.fromJson(json.decode(responseBody));
     } else if (await _canRetry(responseBody)) {
-      return await getFares(vehicle, zone);
+      return await getFare(vehicle, zoneToken);
     } else {
       throw Exception("Couldn't get fares");
     }
