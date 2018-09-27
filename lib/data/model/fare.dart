@@ -32,7 +32,7 @@ class Fare {
   Duration getMinimumDuration() => simpleValues.first.getChargedDuration();
 
   List<FareCost> getSelectedFares(DateTime selectedTime) {
-    if (DateTime.now().isAfter(selectedTime)) {
+    if (selectedTime == null || DateTime.now().isAfter(selectedTime)) {
       return List<FareCost>();
     }
 
