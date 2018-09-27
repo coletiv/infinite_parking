@@ -4,6 +4,8 @@ import 'package:coletiv_infinite_parking/data/session_manager.dart';
 import 'package:coletiv_infinite_parking/network/client/session_client.dart';
 import 'package:coletiv_infinite_parking/page/add_session.dart';
 import 'package:coletiv_infinite_parking/page/auth.dart';
+import 'package:coletiv_infinite_parking/service/push_notifications.dart';
+import 'package:coletiv_infinite_parking/service/session_renew.dart';
 
 class SessionsPage extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class SessionsPageState extends State<SessionsPage> {
   void initState() {
     super.initState();
     _getSessions();
+    pushNotifications.initialize();
   }
 
   BuildContext _context;
@@ -38,6 +41,8 @@ class SessionsPageState extends State<SessionsPage> {
     final isLoggedOut = await sessionManager.deleteSession();
 
     if (isLoggedOut) {
+      await pushNotifications.cancelAll();
+      await cancelSessionRenew();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

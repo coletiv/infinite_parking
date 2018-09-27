@@ -34,6 +34,9 @@ void scheduleSessionRenew(Session session) async {
   }
 }
 
+Future cancelSessionRenew() async =>
+    AndroidAlarmManager.cancel(_sessionScheduleId);
+
 Future<bool> _needToRenewSession() async {
   DateTime selectedTime = await sessionManager.getSelectedTime();
   if (DateTime.now().isAfter(selectedTime)) {
