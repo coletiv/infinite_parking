@@ -1,4 +1,4 @@
-package com.example.coletivinfiniteparking;
+package com.coletiv.infiniteparking;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

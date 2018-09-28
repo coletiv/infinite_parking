@@ -5,8 +5,6 @@ class Fare {
   final List<FareCost> values;
   final List<FareCost> simpleValues;
 
-  int simpleFareIndex;
-
   Fare({
     this.promiseToken,
     this.values,
@@ -31,9 +29,56 @@ class Fare {
         'simple_view': simpleValues.map((fareCost) => fareCost.toJson()),
       };
 
-  void updateSelectedSimpleFare(int simpleFareIndex) {
-    this.simpleFareIndex = simpleFareIndex;
+  Duration getMinimumDuration() => simpleValues.first.getChargedDuration();
+
+  List<FareCost> getSelectedFares(DateTime selectedTime) {
+    if (DateTime.now().isAfter(selectedTime)) {
+      return List<FareCost>();
+    }
+
+    Duration sessionDuration = selectedTime.difference(DateTime.now());
+
+    Duration durationLeftToCalculate = sessionDuration;
+
+    List<FareCost> selectedFares = List<FareCost>();
+
+    while (durationLeftToCalculate.inMicroseconds > 0) {
+      FareCost fare = simpleValues.firstWhere(
+          (fareCost) =>
+              fareCost.getChargedDuration() >= durationLeftToCalculate,
+          orElse: () => simpleValues.last);
+
+      selectedFares.add(fare);
+      durationLeftToCalculate -= fare.getChargedDuration();
+    }
+
+    return selectedFares;
   }
 
-  FareCost getSelectedSimpleFare() => simpleValues[simpleFareIndex];
+  double getSessionCost(DateTime selectedTime) {
+    double cost = 0.0;
+
+    getSelectedFares(selectedTime).forEach((fareCost) => cost += fareCost.cost);
+
+    return cost;
+  }
+
+  String getFormattedSessionCost(DateTime selectedTime) {
+    return "${getSessionCost(selectedTime)}€";
+  }
+
+  DateTime getSessionExpirationDate(DateTime selectedTime) {
+    Duration sessionDuration = Duration();
+
+    getSelectedFares(selectedTime).forEach(
+        (fareCost) => sessionDuration += fareCost.getChargedDuration());
+
+    return DateTime.now().add(sessionDuration);
+  }
+
+  String getFormattedSessionExpirationTime(DateTime selectedTime) {
+    int expirationHour = getSessionExpirationDate(selectedTime).hour;
+    int expirationMinute = getSessionExpirationDate(selectedTime).minute;
+    return "Expires: $expirationHour:$expirationMinute";
+  }
 }

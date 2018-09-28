@@ -1,12 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:coletiv_infinite_parking/data/model/session.dart';
 import 'package:coletiv_infinite_parking/data/model/fare.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
 import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
+import 'package:coletiv_infinite_parking/data/session_manager.dart';
+import 'package:coletiv_infinite_parking/network/client/fare_client.dart';
 import 'package:coletiv_infinite_parking/network/client/session_client.dart';
-import 'package:coletiv_infinite_parking/widget/dialog/select_fare_dialog.dart';
+import 'package:coletiv_infinite_parking/services/session_renew.dart';
 import 'package:coletiv_infinite_parking/widget/dialog/select_municipal_dialog.dart';
 import 'package:coletiv_infinite_parking/widget/dialog/select_vehicle_dialog.dart';
 import 'package:coletiv_infinite_parking/widget/dialog/select_zone_dialog.dart';
@@ -22,10 +25,52 @@ class AddSessionPageState extends State<AddSessionPage> {
   Vehicle _selectedVehicle;
   Municipal _selectedMunicipal;
   MunicipalZone _selectedZone;
+  DateTime _selectedTime;
+
   Fare _fare;
 
+  bool _isLoadingFares = false;
+
+  void _getFares() async {
+    if (_selectedVehicle == null || _selectedZone == null) {
+      return;
+    }
+
+    setState(() {
+      _isLoadingFares = true;
+    });
+
+    _fare = await fareClient.getFare(_selectedVehicle, _selectedZone);
+
+    setState(() {
+      _isLoadingFares = false;
+    });
+  }
+
   void _addSession() async {
-    await sessionClient.addSession(_selectedVehicle, _selectedZone, _fare);
+    bool isParkingSessionSaved = await sessionManager.saveParkingSession(
+      _selectedVehicle,
+      _selectedZone,
+      _selectedTime,
+    );
+
+    if (!isParkingSessionSaved) {
+      _showError("Some problem happened while creating your parking session");
+      return;
+    }
+
+    Session parkingSession = await sessionClient.addSession(
+      _selectedVehicle,
+      _selectedZone,
+      _fare,
+    );
+
+    if (parkingSession == null) {
+      _showError("Some problem happened while creating your parking session");
+    } else {
+      scheduleSessionRenew(parkingSession);
+      Navigator.pop(context);
+    }
   }
 
   void _validateInput() {
@@ -35,8 +80,8 @@ class AddSessionPageState extends State<AddSessionPage> {
       _showError("Please select a Municipal first!");
     } else if (_selectedZone == null) {
       _showError("Please select a Zone first!");
-    } else if (_fare == null || _fare.simpleFareIndex == null) {
-      _showError("Please select a Fare first!");
+    } else if (_fare == null || _selectedTime == null) {
+      _showError("Please select a Time first!");
     } else {
       _addSession();
     }
@@ -75,6 +120,7 @@ class AddSessionPageState extends State<AddSessionPage> {
       }
       _selectedVehicle = vehicle;
     });
+    _getFares();
   }
 
   Future _selectMunicipal() async {
@@ -138,42 +184,81 @@ class AddSessionPageState extends State<AddSessionPage> {
       }
       _selectedZone = zone;
     });
+    _getFares();
   }
 
-  void _selectFare() {
+  void _selectTime() {
     if (_selectedVehicle == null) {
       _showError("Please choose your Vehicle first!");
     } else if (_selectedZone == null) {
       _showError("Please select a Zone first!");
     } else {
-      _showFareSelectionDialog();
+      _showTimeSelectionDialog();
     }
   }
 
-  Future _showFareSelectionDialog() async {
-    Fare fare = await Navigator.push(
-      context,
-      MaterialPageRoute<Fare>(
-        builder: (BuildContext context) {
-          return SelectFareDialog(
-            selectedVehicle: _selectedVehicle,
-            selectedZone: _selectedZone,
-            selectedFare: _fare,
-          );
-        },
-        fullscreenDialog: true,
-      ),
+  Future _showTimeSelectionDialog() async {
+    TimeOfDay time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
     );
 
-    if (fare != null) {
-      _onFareSelected(fare);
+    if (time != null) {
+      _onTimeSelected(time);
     }
   }
 
-  void _onFareSelected(Fare fare) {
+  void _onTimeSelected(TimeOfDay time) {
+    DateTime currentDate = DateTime.now();
+    DateTime selectedTime = DateTime(
+      currentDate.year,
+      currentDate.month,
+      currentDate.day,
+      time.hour,
+      time.minute,
+    );
+
+    if (!_isSelectedTimeValid(selectedTime)) {
+      return;
+    }
+
     setState(() {
-      _fare = fare;
+      _selectedTime = selectedTime;
     });
+  }
+
+  bool _isSelectedTimeValid(DateTime selectedTime) {
+    DateTime currentDate = DateTime.now();
+
+    // After 19:00 it's not possible to schedule a session
+    if (selectedTime.hour > 19) {
+      _showError("Please select a time before 19:00");
+      return false;
+    }
+
+    // A session cannot be scheduled to the past
+    if (selectedTime.hour < currentDate.hour) {
+      _showError("Please select a time after the current time");
+      return false;
+    }
+
+    // A session cannot be scheduled to the past
+    if (selectedTime.hour == currentDate.hour &&
+        selectedTime.minute < currentDate.minute) {
+      _showError("Please select a time after the current time");
+      return false;
+    }
+
+    int minimumDuration = _fare.getMinimumDuration().inMinutes;
+    int selectedDuration = selectedTime.difference(currentDate).inMinutes;
+
+    // A schedule as a minimum duration
+    if (selectedDuration < minimumDuration) {
+      _showError("${minimumDuration}m is the minimum duration for this zone");
+      return false;
+    }
+
+    return true;
   }
 
   @override
@@ -216,13 +301,26 @@ class AddSessionPageState extends State<AddSessionPage> {
                     _selectedZone != null ? _selectedZone.name : "Select zone"),
                 onTap: _selectZone,
               ),
-              ListTile(
-                title: Text("Fare"),
-                trailing: Icon(Icons.arrow_right),
-                subtitle: Text(_fare != null && _fare.simpleFareIndex != null
-                    ? "${_fare.getSelectedSimpleFare().cost}€ - Duration: ${_fare.getSelectedSimpleFare().getChargedDuration().inMinutes}"
-                    : "Select fare"),
-                onTap: _selectFare,
+              Builder(
+                builder: (BuildContext context) {
+                  if (_isLoadingFares) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(),
+                      ],
+                    );
+                  } else {
+                    return ListTile(
+                      title: Text("Time"),
+                      trailing: Icon(Icons.arrow_right),
+                      subtitle: Text(_fare != null && _selectedTime != null
+                          ? "${_fare.getFormattedSessionCost(_selectedTime)} - ${_fare.getFormattedSessionExpirationTime(_selectedTime)}"
+                          : "Select time"),
+                      onTap: _selectTime,
+                    );
+                  }
+                },
               ),
             ],
           );

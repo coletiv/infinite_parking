@@ -27,4 +27,12 @@ class _SessionClient {
       return null;
     }
   }
+
+  Future<Session> refreshSession(Fare fare) async {
+    try {
+      return await network.refreshSession(fare);
+    } catch (e) {
+      return null;
+    }
+  }
 }
