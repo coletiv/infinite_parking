@@ -26,14 +26,14 @@ void scheduleSessionRenew(Session session) async {
 
   if (isScheduled) {
     await pushNotifications.show(
-      "Your parking session was scheduled to renew automatically",
+      "Your session will be renewed automatically",
       "It will be renewed at ${session.getFormattedFinalDate()}",
     );
     print("Session will be renewed at ${session.getFinalDate()}");
   } else {
     await pushNotifications.show(
-      "Your parking session will not renew automatically",
-      "Once it's over you must open the app to renewed it manually",
+      "Your session will not be renewed automatically",
+      "Once it's over, you must open the app to renewed it manually",
     );
     await sessionManager.deleteParkingSession();
     print("Session was not scheduled to auto renew");
@@ -80,7 +80,7 @@ void _renewSession() async {
   if (session != null) {
     scheduleSessionRenew(session);
     await pushNotifications.show(
-      "Your parking session was successfully renewed",
+      "Your parking session was renewed",
       "It will last until ${session.getFormattedFinalDate()}",
     );
     print("Session renewed successfully until ${session.getFinalDate()}");
