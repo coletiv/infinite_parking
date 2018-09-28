@@ -59,6 +59,28 @@ class SessionsPageState extends State<SessionsPage> {
     }
   }
 
+  void _showLogoutAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Do you want to logout?"),
+          content: Text("You will lose all your scheduled sessions."),
+          actions: [
+            FlatButton(
+              child: Text("No"),
+              onPressed: () => Navigator.pop(context),
+            ),
+            FlatButton(
+              child: Text("Yes"),
+              onPressed: () => _logout(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _addSession() {
     Navigator.push(
       context,
@@ -88,7 +110,7 @@ class SessionsPageState extends State<SessionsPage> {
           ),
           IconButton(
             icon: Icon(Icons.exit_to_app),
-            onPressed: _logout,
+            onPressed: _showLogoutAlert,
           )
         ],
       ),
