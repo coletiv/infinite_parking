@@ -143,7 +143,7 @@ class SessionsPageState extends State<SessionsPage> {
                         session.getPlate(),
                       ),
                       subtitle: Text(
-                        "Ends at:${session.getFormattedFinalDate()}",
+                        "Ends at: ${session.getFormattedFinalDate()}",
                       ),
                     );
                   },
