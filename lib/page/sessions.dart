@@ -4,6 +4,8 @@ import 'package:coletiv_infinite_parking/data/session_manager.dart';
 import 'package:coletiv_infinite_parking/network/client/session_client.dart';
 import 'package:coletiv_infinite_parking/page/add_session.dart';
 import 'package:coletiv_infinite_parking/page/auth.dart';
+import 'package:coletiv_infinite_parking/service/push_notifications.dart';
+import 'package:coletiv_infinite_parking/service/session_renew.dart';
 
 class SessionsPage extends StatefulWidget {
   @override
@@ -38,6 +40,8 @@ class SessionsPageState extends State<SessionsPage> {
     final isLoggedOut = await sessionManager.deleteSession();
 
     if (isLoggedOut) {
+      await pushNotifications.cancelAll();
+      await cancelSessionRenew();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -53,6 +57,28 @@ class SessionsPageState extends State<SessionsPage> {
         ),
       );
     }
+  }
+
+  void _showLogoutAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Do you want to logout?"),
+          content: Text("You will lose all your scheduled sessions."),
+          actions: [
+            FlatButton(
+              child: Text("No"),
+              onPressed: () => Navigator.pop(context),
+            ),
+            FlatButton(
+              child: Text("Yes"),
+              onPressed: () => _logout(),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _addSession() {
@@ -84,7 +110,7 @@ class SessionsPageState extends State<SessionsPage> {
           ),
           IconButton(
             icon: Icon(Icons.exit_to_app),
-            onPressed: _logout,
+            onPressed: _showLogoutAlert,
           )
         ],
       ),
@@ -110,12 +136,14 @@ class SessionsPageState extends State<SessionsPage> {
                 child: ListView.builder(
                   itemCount: _sessions.length,
                   itemBuilder: (context, index) {
+                    Session session = _sessions[index];
+
                     return ListTile(
                       title: Text(
-                        _sessions[index].getPlate(),
+                        session.getPlate(),
                       ),
                       subtitle: Text(
-                        _sessions[index].getFormattedFinalDate(),
+                        "Ends at: ${session.getFormattedFinalDate()}",
                       ),
                     );
                   },

@@ -9,7 +9,7 @@ import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
 import 'package:coletiv_infinite_parking/data/session_manager.dart';
 import 'package:coletiv_infinite_parking/network/client/fare_client.dart';
 import 'package:coletiv_infinite_parking/network/client/session_client.dart';
-import 'package:coletiv_infinite_parking/services/session_renew.dart';
+import 'package:coletiv_infinite_parking/service/session_renew.dart';
 import 'package:coletiv_infinite_parking/widget/dialog/select_municipal_dialog.dart';
 import 'package:coletiv_infinite_parking/widget/dialog/select_vehicle_dialog.dart';
 import 'package:coletiv_infinite_parking/widget/dialog/select_zone_dialog.dart';

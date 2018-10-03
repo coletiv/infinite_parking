@@ -46,16 +46,15 @@ class Session {
 
   DateTime getInitialDate() {
     final dateString = dtStart["date"];
-    return DateTime.parse(dateString);
+    return DateTime.parse(dateString).toLocal();
   }
 
-  DateTime getFinalDate() => getInitialDate().add(getDuration());
+  DateTime getFinalDate() => getInitialDate().add(getDuration()).toLocal();
 
   Duration getTimeLeft() => getFinalDate().difference(DateTime.now());
 
   String getFormattedFinalDate() {
     final finalDate = getFinalDate();
-    final timeLeft = getTimeLeft();
-    return 'Ends: ${finalDate.hour}:${finalDate.minute} Time Left: ${timeLeft.inMinutes} minutes';
+    return '${finalDate.hour}:${finalDate.minute}';
   }
 }

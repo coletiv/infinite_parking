@@ -3,6 +3,7 @@ import 'package:coletiv_infinite_parking/data/session_manager.dart';
 import 'package:coletiv_infinite_parking/network/client/auth_client.dart';
 import 'package:coletiv_infinite_parking/page/sessions.dart';
 import 'package:coletiv_infinite_parking/page/auth.dart';
+import 'package:coletiv_infinite_parking/service/push_notifications.dart';
 import 'package:android_alarm_manager/android_alarm_manager.dart';
 
 class SplashPage extends StatefulWidget {
@@ -19,6 +20,8 @@ class SplashPageState extends State<SplashPage> {
 
   void _login() async {
     await AndroidAlarmManager.initialize();
+    await pushNotifications.initialize();
+    
     final isLoggedIn = await authClient.refreshToken();
 
     _redirectUser(isLoggedIn);
@@ -34,6 +37,7 @@ class SplashPageState extends State<SplashPage> {
       );
     } else {
       sessionManager.deleteSession();
+      pushNotifications.cancelAll();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

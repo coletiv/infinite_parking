@@ -3,6 +3,7 @@ import 'package:coletiv_infinite_parking/data/model/session.dart';
 import 'package:coletiv_infinite_parking/network/client/fare_client.dart';
 import 'package:coletiv_infinite_parking/network/client/session_client.dart';
 import 'package:coletiv_infinite_parking/data/session_manager.dart';
+import 'package:coletiv_infinite_parking/service/push_notifications.dart';
 import 'package:android_alarm_manager/android_alarm_manager.dart';
 
 const int _sessionScheduleId = 1;
@@ -24,15 +25,23 @@ void scheduleSessionRenew(Session session) async {
   );
 
   if (isScheduled) {
-    // TODO: show push notification saying that his session will renew
-    print(
-        "Session will be renewed in ${session.getDuration().inMinutes} minutes");
+    await pushNotifications.show(
+      "Your session will be renewed automatically",
+      "It will be renewed at ${session.getFormattedFinalDate()}",
+    );
+    print("Session will be renewed at ${session.getFinalDate()}");
   } else {
-    // TODO: show push notification saying that his session will not renew
+    await pushNotifications.show(
+      "Your session will not be renewed automatically",
+      "Once it's over, you must open the app to renewed it manually",
+    );
     await sessionManager.deleteParkingSession();
-    print("Session renew could not be scheduled");
+    print("Session was not scheduled to auto renew");
   }
 }
+
+Future cancelSessionRenew() async =>
+    AndroidAlarmManager.cancel(_sessionScheduleId);
 
 Future<bool> _needToRenewSession() async {
   DateTime selectedTime = await sessionManager.getSelectedTime();
@@ -57,8 +66,12 @@ void _renewSession() async {
 
   Fare fare = await fareClient.getSelectedFare();
   if (fare == null) {
-    // TODO: show push notification saying that there was a problem renewing
-    print("Couldn't get fare");
+    await pushNotifications.show(
+      "Your parking session was not renewed",
+      "Please, open the app and renew it manually",
+    );
+    await sessionManager.deleteParkingSession();
+    print("Session not renewed - Fare is invalid");
     return;
   }
 
@@ -66,10 +79,16 @@ void _renewSession() async {
 
   if (session != null) {
     scheduleSessionRenew(session);
-    // TODO: show push notification saying that his session is being renewed
+    await pushNotifications.show(
+      "Your parking session was renewed",
+      "It will last until ${session.getFormattedFinalDate()}",
+    );
     print("Session renewed successfully until ${session.getFinalDate()}");
   } else {
-    // TODO: show push notification saying that there was a problem renewing
+    await pushNotifications.show(
+      "Your parking session was not renewed",
+      "Please, open the app and renew it manually",
+    );
     await sessionManager.deleteParkingSession();
     print("Session not renewed");
   }
