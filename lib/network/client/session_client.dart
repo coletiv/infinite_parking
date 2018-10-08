@@ -35,4 +35,12 @@ class _SessionClient {
       return null;
     }
   }
+
+  Future<bool> endSession() async {
+    try {
+      return await network.endSession();
+    } catch (e) {
+      return false;
+    }
+  }
 }

@@ -75,6 +75,8 @@ void _renewSession() async {
     return;
   }
 
+  await sessionClient.endSession();
+
   Session session = await sessionClient.refreshSession(fare);
 
   if (session != null) {

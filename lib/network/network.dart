@@ -242,6 +242,31 @@ class _Network {
     }
   }
 
+  Future<bool> endSession() async {
+    final Session session = await sessionManager.getParkingSession();
+
+    if (session == null || session.token == null) {
+      return false;
+    }
+
+    final String sessionToken = session.token;
+
+    final endSessionUrl = '$_baseUrl/parking/sessions/$sessionToken/end/';
+
+    final response =
+        await http.post(endSessionUrl, headers: await _getHeaders());
+
+    final responseBody = utf8.decode(response.bodyBytes);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else if (await _canRetry(responseBody)) {
+      return await endSession();
+    } else {
+      throw Exception("Couldn't create session");
+    }
+  }
+
   // VEHICLE
 
   Future<List<Vehicle>> getVehicles() async {

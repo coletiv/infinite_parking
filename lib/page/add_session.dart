@@ -48,7 +48,8 @@ class AddSessionPageState extends State<AddSessionPage> {
   }
 
   void _addSession() async {
-    bool isParkingSessionSaved = await sessionManager.saveParkingSession(
+    bool isParkingSessionSaved =
+        await sessionManager.saveSelectedParkingSession(
       _selectedVehicle,
       _selectedZone,
       _selectedTime,
@@ -68,6 +69,7 @@ class AddSessionPageState extends State<AddSessionPage> {
     if (parkingSession == null) {
       _showError("Some problem happened while creating your parking session");
     } else {
+      await sessionManager.saveParkingSession(parkingSession);
       scheduleSessionRenew(parkingSession);
       Navigator.pop(context);
     }
