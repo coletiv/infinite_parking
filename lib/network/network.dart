@@ -245,11 +245,11 @@ class _Network {
   Future<bool> endSession() async {
     final Session session = await sessionManager.getParkingSession();
 
-    if (session == null) {
+    if (session == null || session.token == null) {
       return false;
     }
 
-    final String sessionToken = session.positionToken;
+    final String sessionToken = session.token;
 
     final endSessionUrl = '$_baseUrl/parking/sessions/$sessionToken/end/';
 

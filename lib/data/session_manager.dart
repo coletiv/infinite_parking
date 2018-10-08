@@ -138,6 +138,14 @@ class _SessionManager {
     return DateTime.tryParse(selectedTimeString);
   }
 
-  Future<Session> getParkingSession() async =>
-      await _getPrefs().then((prefs) => prefs.get(_parkingSessionKey));
+  Future<Session> getParkingSession() async {
+    final String sessionJson =
+        await _getPrefs().then((prefs) => prefs.get(_parkingSessionKey));
+
+    if (sessionJson == null) {
+      return null;
+    } else {
+      return Session.fromJson(json.decode(sessionJson));
+    }
+  }
 }

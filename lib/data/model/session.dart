@@ -2,6 +2,7 @@ class Session {
   final Map<String, dynamic> plate;
   final Map<String, dynamic> dtStart;
   final String positionToken;
+  final String token;
   final List<dynamic> coordinates;
   final Map<String, dynamic> costTimePair;
 
@@ -9,6 +10,7 @@ class Session {
     this.plate,
     this.dtStart,
     this.positionToken,
+    this.token,
     this.coordinates,
     this.costTimePair,
   });
@@ -18,6 +20,7 @@ class Session {
       plate: json["plate"],
       dtStart: json['dtstart'],
       positionToken: json["position_token"],
+      token : json['token'],
       coordinates: json['coordinates'],
       costTimePair: json['cost_time_pair'],
     );
@@ -27,6 +30,7 @@ class Session {
         'plate': plate,
         'dtstart': dtStart,
         'position_token': positionToken,
+        'token' : token,
         'coordinates': coordinates,
         'cost_time_pair': costTimePair,
       };
