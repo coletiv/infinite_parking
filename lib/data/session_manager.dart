@@ -15,6 +15,7 @@ class _SessionManager {
   final String _authTokenKey = 'AuthToken';
   final String _emailKey = "Email";
   final String _passwordKey = "Password";
+  final String _providerKey = "Provider";
   final String _selectedVehicleKey = "SelectedVehicle";
   final String _selectedZoneTokenKey = "SelectedZoneToken";
   final String _selectedTimeKey = "SelectedTimeToken";
@@ -38,6 +39,11 @@ class _SessionManager {
   Future<bool> _savePassword(String password) async {
     return await _getPrefs()
         .then((prefs) => prefs.setString(_passwordKey, password));
+  }
+
+  Future<bool> saveProvider(int provider) async {
+    return await _getPrefs()
+        .then((prefs) => prefs.setInt(_providerKey, provider));
   }
 
   Future<bool> saveSession(
@@ -65,6 +71,9 @@ class _SessionManager {
 
   Future<String> getPassword() async =>
       await _getPrefs().then((prefs) => prefs.get(_passwordKey));
+
+  Future<int> getProvider() async =>
+      await _getPrefs().then((prefs) => prefs.get(_providerKey));
 
   Future<bool> deleteSession() async =>
       await _getPrefs().then((prefs) => prefs.clear());
