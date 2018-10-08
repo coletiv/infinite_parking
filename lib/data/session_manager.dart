@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:coletiv_infinite_parking/data/model/auth_token.dart';
 import 'package:coletiv_infinite_parking/data/model/municipal_zone.dart';
+import 'package:coletiv_infinite_parking/data/model/session.dart';
 import 'package:coletiv_infinite_parking/data/model/vehicle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +18,7 @@ class _SessionManager {
   final String _selectedVehicleKey = "SelectedVehicle";
   final String _selectedZoneTokenKey = "SelectedZoneToken";
   final String _selectedTimeKey = "SelectedTimeToken";
+  final String _parkingSessionKey = "ParkingSession";
 
   Future<SharedPreferences> _getPrefs() async =>
       await SharedPreferences.getInstance();
@@ -90,7 +92,7 @@ class _SessionManager {
         (prefs) => prefs.setString(_selectedTimeKey, time.toIso8601String()));
   }
 
-  Future<bool> saveParkingSession(
+  Future<bool> saveSelectedParkingSession(
       Vehicle vehicle, MunicipalZone zone, DateTime time) async {
     return Future.wait([
       _saveSelectedVehicle(vehicle),
@@ -99,12 +101,19 @@ class _SessionManager {
     ]).then((_) => true).catchError(() => false);
   }
 
+  Future<bool> saveParkingSession(Session session) async {
+    final String sessionJson = json.encode(session);
+    return await _getPrefs()
+        .then((prefs) => prefs.setString(_parkingSessionKey, sessionJson));
+  }
+
   Future<bool> deleteParkingSession() async {
     return await _getPrefs().then((prefs) {
       Future.wait([
         prefs.setString(_selectedVehicleKey, null),
         prefs.setString(_selectedZoneTokenKey, null),
-        prefs.setString(_selectedTimeKey, null)
+        prefs.setString(_selectedTimeKey, null),
+        prefs.setString(_parkingSessionKey, null)
       ]).then((_) => true).catchError(() => false);
     });
   }
@@ -128,4 +137,7 @@ class _SessionManager {
         await _getPrefs().then((prefs) => prefs.get(_selectedTimeKey));
     return DateTime.tryParse(selectedTimeString);
   }
+
+  Future<Session> getParkingSession() async =>
+      await _getPrefs().then((prefs) => prefs.get(_parkingSessionKey));
 }
