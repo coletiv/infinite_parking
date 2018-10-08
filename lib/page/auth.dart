@@ -10,8 +10,11 @@ class AuthPage extends StatefulWidget {
 class AuthPageState extends State<AuthPage> {
   BuildContext _context;
 
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final List<String> _authOptions = ["Via Verde", "Telpark"];
+  int _selectedProvider = 0;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   bool _isLoading = false;
 
@@ -21,7 +24,7 @@ class AuthPageState extends State<AuthPage> {
     final email = _emailController.text;
     final password = _passwordController.text;
 
-    final isLoggedIn = await authClient.login(email, password);
+    final isLoggedIn = await authClient.login(email, password, _selectedProvider);
 
     if (isLoggedIn) {
       Navigator.pushReplacement(
@@ -94,22 +97,43 @@ class AuthPageState extends State<AuthPage> {
                       decoration: InputDecoration(hintText: 'Password'),
                     ),
                   ),
-                  Stack(
-                    alignment: AlignmentDirectional.center,
-                    children: <Widget>[
-                      Opacity(
-                        opacity: _isLoading ? 1.0 : 0.0,
-                        child: CircularProgressIndicator(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      DropdownButton(
+                        items: _authOptions.map(
+                          (option) {
+                            return DropdownMenuItem(
+                              child: Text(option),
+                              value: _authOptions.indexOf(option),
+                            );
+                          },
+                        ).toList(),
+                        value: _selectedProvider,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedProvider = value;
+                          });
+                        },
                       ),
-                      Opacity(
-                        opacity: _isLoading ? 0.0 : 1.0,
-                        child: RaisedButton(
-                          onPressed: _login,
-                          child: Text('LOGIN'),
-                        ),
-                      ),
+                      Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: <Widget>[
+                          Opacity(
+                            opacity: _isLoading ? 1.0 : 0.0,
+                            child: CircularProgressIndicator(),
+                          ),
+                          Opacity(
+                            opacity: _isLoading ? 0.0 : 1.0,
+                            child: RaisedButton(
+                              onPressed: _login,
+                              child: Text('LOGIN'),
+                            ),
+                          ),
+                        ],
+                      )
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

@@ -34,12 +34,26 @@ class _Network {
       headers["X-EOS-USER-TOKEN"] = authToken.userSessionToken;
     }
 
+    final int provider = await sessionManager.getProvider();
+
+    if (provider == 0) {
+      // Via Verde
+      headers["X-EOS-CLIENT-TOKEN"] = "2463bc87-6e92-480e-a56b-4260ff8b6a38";
+    } else if (provider == 1) {
+      // Telpark
+      headers["X-EOS-CLIENT-TOKEN"] = "4cc77160-4458-4f0d-a1f1-551d70daded0";
+    }
+
     return headers;
   }
 
   // AUTHENTICATION
 
-  Future<bool> login(String email, String password) async {
+  Future<bool> login(String email, String password, int provider) async {
+    if (!await sessionManager.saveProvider(provider)) {
+      return false;
+    }
+
     final loginUrl = '$_baseUrl/auth/accounts';
     final body = json.encode({'username': email, 'password': password});
 

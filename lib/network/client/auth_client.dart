@@ -7,9 +7,9 @@ final authClient = _AuthClient._internal();
 class _AuthClient {
   _AuthClient._internal();
 
-  Future<bool> login(String email, String password) async {
+  Future<bool> login(String email, String password, int provider) async {
     try {
-      return await network.login(email, password);
+      return await network.login(email, password, provider);
     } catch (e) {
       return false;
     }
