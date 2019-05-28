@@ -52,7 +52,7 @@ class _SessionManager {
       _saveAuthToken(authToken),
       _saveEmail(email),
       _savePassword(password),
-    ]).then((_) => true).catchError(() => false);
+    ]).then((_) => true).catchError((_) => false);
   }
 
   Future<AuthToken> getAuthToken() async {
